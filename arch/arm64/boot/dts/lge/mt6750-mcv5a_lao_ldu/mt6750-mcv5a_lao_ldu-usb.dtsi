@@ -1,0 +1,38 @@
+/*
+ * LG Electronics LS7 usb device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&pio {
+	sm5513_pins_default_cfg: sm5513_pins_default_cfg {
+	};
+
+	sm5513_pins_int_cfg: @gpio0 {
+        // SM5513 nINT-pin
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO43__FUNC_GPIO43>;
+			slew-rate = <0>;    // INPUT
+			bias-disable;
+		};
+	};
+};
+
+&i2c1 {
+	sm5513@21 {
+		compatible = "siliconmitus,sm5513";
+		reg = <0x21>;
+		status = "okay";
+
+		interrupt-parent = <&eintc>;
+		interrupts = <43 IRQ_TYPE_LEVEL_LOW>;
+		sm5513,irq-gpio = <43>;
+		sm5513,wakeup = <1>;
+
+		pinctrl-names = "default", "sm5513_int_cfg";
+		pinctrl-0 = <&sm5513_pins_default_cfg>;
+		pinctrl-1 = <&sm5513_pins_int_cfg>;
+	};
+};

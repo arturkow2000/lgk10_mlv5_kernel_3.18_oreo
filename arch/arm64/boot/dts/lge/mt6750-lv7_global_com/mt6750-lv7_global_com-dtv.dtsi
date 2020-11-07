@@ -1,0 +1,68 @@
+/*
+ * LG Electronics LV5 touch device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/ {
+	soc {
+		dtv: dtv {
+			compatible = "mediatek,dtv";
+		};
+	};
+
+	rf_clock_buffer_ctrl:rf_clock_buffer {
+		compatible = "mediatek,rf_clock_buffer";
+		mediatek,clkbuf-quantity = <4>;
+		mediatek,clkbuf-config = <2 1 0 1>;
+		mediatek,clkbuf-driving-current = <2 2 2 2>;
+	};
+};
+
+&spi1 {
+	/* just configure clock frequency by changing clock-div value */
+	compatible = "mediatek,mt6755-spi";
+	reg = <0x11010000 0x1000>;
+	cell-index = <1>;
+	spi-padmacro = <0>;
+
+	clocks = <&infrasys INFRA_SPI1>;
+	clock-names = "main";
+	clock-frequency = <109000000>;
+	clock-div = <6>;
+
+	interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_LOW>;
+
+	status = "okay";
+};
+
+&dtv {
+	/*set interrupt configure here to register irq function,
+	set interrupt pin number and interrupt mode(0x2022 = IRQF_ONESHOT | IRQF_DISABLED | IRQF_TRIGGER_FALLING)*/
+	interrupt-parent = <&eintc>;
+	interrupts = <12 0x0022>;
+
+	/*set gpio configure here*/
+	en-gpio = <18>;
+	irq-gpio = <12>;
+	ant-sw-gpio = <116>;
+
+	/*set spi pin to control*/
+	spi-miso-gpio = <25>;
+	spi-mosi-gpio = <27>;
+	spi-clk-gpio = <28>;
+	spi-cs-gpio = <26>;
+
+	spi-bus-num = <1>;
+
+	/*set hw configure here
+	when use pmic clk buffer, change use-xtal to 0, and set xtal-freq value*/
+	use-xtal = <0>;
+	xtal-freq = <26000>;
+	use-ant-sw = <1>;
+	ant-sw-active-value = <0>;
+
+	status = "okay";
+};

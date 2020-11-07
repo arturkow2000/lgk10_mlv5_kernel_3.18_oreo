@@ -1,0 +1,94 @@
+/*
+ * LG Electronics CV3 touch device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c0 {
+
+	cap_touch@5d {
+		status = "disabled";
+	};
+
+		lg4894@28 {
+		compatible = "lge,lg4894";
+		reg = <0x28>;
+		status = "okay";
+
+		interrupt-parent = <&eintc>;
+		interrupts = <1 0x2002>;
+
+		irqflags = <0x2002>;
+		irq-gpio = <&pio 1 0x2002>;
+		reset-gpio = <&pio 10 0x0>;
+
+		pinctrl-names = "default", "touch_pin_active", "touch_pin_sleep";	/* Touch GPIO pin name setting */
+		pinctrl-0 = <&ts_pin_default>;
+		pinctrl-1 = <&ts_pin_active>;		/* Touch GPIO pin active setting */
+		pinctrl-2 = <&ts_pin_suspend>;		/* Touch GPIO pin suspend setting */
+
+		/* Caps */
+		max_x = <720>;
+		max_y = <1280>;
+		max_pressure = <0xff>;
+		max_width_major = <15>;
+		max_width_minor = <15>;
+		max_orientation = <1>;
+		max_id = <10>;
+
+		/* role */
+		hw_reset_delay = <210>;
+		sw_reset_delay = <90>;
+		use_lpwg = <1>;
+		use_lpwg_test = <1>;
+		hide_coordinate = <1>;
+
+		/* firmware */
+		use_fw_upgrade = <0>;
+
+		fw_image = "touch/cv3/siw/TJW53CV3_1_04.img";
+		panel_spec = "touch/cv3/siw/cv3_limit.txt";
+		panel_spec_mfts_folder = "touch/cv3/siw/cv3_limit_mfts.txt";
+
+		/* Performance Test */
+		use_perf_test = <0>;
+		test_delay = <16>;
+		test_pressure = <50>;
+		test_width = <100>;
+		click_test_x = <90>;
+		click_test_y = <315>;
+		v_drag_test_x = <72>;
+		v_drag_test_start_y = <858>;
+		v_drag_test_end_y = <421>;
+		h_drag_test_start_x = <578>;
+		h_drag_test_end_x = <141>;
+		h_drag_test_y = <896>;
+	};
+};
+
+&touch {
+	status = "disabled";
+};
+
+/* touch gpio start */
+&pio {
+	ts_pin_default: ts_default {
+	};
+	ts_pin_active: ts_active {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+	};
+	ts_pin_suspend: ts_suspend {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+	};
+};
+/* touch gpio end */

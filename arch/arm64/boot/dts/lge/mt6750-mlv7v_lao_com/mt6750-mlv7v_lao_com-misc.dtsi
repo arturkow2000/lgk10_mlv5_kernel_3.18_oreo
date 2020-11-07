@@ -1,0 +1,87 @@
+/*
+ * LG Electronics LV7V misc device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&odm {
+	led0:led@0 {
+        compatible = "mediatek,red";
+        led_mode = <3>;
+        data = <1>;
+        pwm_config = <0 0 0 0 0>;
+    };
+
+	vibrator0:vibrator@0 {
+		compatible = "mediatek,vibrator";
+		vib_timer = <25>;
+		vib_limit = <9>;
+		vib_vol= <6>;
+	};
+};
+
+&pio {
+    hallic_default_cfg: hallic_default_cfg {
+    };
+
+    hallic_hall_int_cfg: gpio@2 {
+        // HALL_INT
+        pins_cmd_dat {
+            pins = <PINMUX_GPIO2__FUNC_GPIO2>;
+            slew-rate = <0>;        // input
+        };
+    };
+
+/* FM_TDMB_SW */
+	fm_tdmb_sw_default: fm_tdmb_sw_default {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO116__FUNC_GPIO116>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	fm_tdmb_sw_high: fm_tdmb_sw_fm {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO116__FUNC_GPIO116>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	fm_tdmb_sw_low: fm_tdmb_sw_tdmb {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO116__FUNC_GPIO116>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+};
+
+&odm {
+	hallic_with_pen {
+		compatible = "lge,hallic";
+
+		interrupt-parent = <&eintc>;
+		interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
+		debounce = <2 0>;    // gpio, debounce_time
+
+		pinctrl-names = "default", "hall_int_cfg";
+		pinctrl-0 = <&hallic_default_cfg>;
+		pinctrl-1 = <&hallic_hall_int_cfg>;
+
+		status = "okay";
+	};
+
+	fm_tdmb_switch {
+		compatible = "lge,fm_switch";
+		status = "okay";
+		lge,gpio-control = <1>;
+		pinctrl-names = "fm_tdmb_sw_default", "fm_tdmb_sw_fm", "fm_tdmb_sw_tdmb";
+		pinctrl-0 = <&fm_tdmb_sw_default>;
+		pinctrl-1 = <&fm_tdmb_sw_high>;
+		pinctrl-2 = <&fm_tdmb_sw_low>;
+	};
+};

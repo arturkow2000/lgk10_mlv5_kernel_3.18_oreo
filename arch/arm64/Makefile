@@ -76,11 +76,24 @@ all:	$(KBUILD_IMAGE) $(KBUILD_DTBS)
 MTK_PLATFORM := $(CONFIG_MTK_PLATFORM:"%"=%)
 MTK_PROJECT := $(CONFIG_ARCH_MTK_PROJECT:"%"=%)
 export MTK_PLATFORM MTK_PROJECT MTK_TARGET_PROJECT
+ifeq ($(CONFIG_MTK_DTBO_FEATURE), y)
 -include $(srctree)/scripts/drvgen/drvgen.mk
+endif
 archprepare: $(DRVGEN_FILE_LIST)
 dtbs: $(DRVGEN_FILE_LIST)
 
 boot := arch/arm64/boot
+
+ifneq ($(CONFIG_MTK_DTBO_FEATURE), y)
+DTS_BASE_NAME := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
+DTS_FILES := $(notdir $(wildcard $(srctree)/$(boot)/dts/lge/$(LGE_TARGET_PLATFORM)-$(DTS_BASE_NAME)/$(LGE_TARGET_PLATFORM)-$(DTS_BASE_NAME)*.dts))
+DTB_FILES := $(patsubst %.dts,%.dtb,$(DTS_FILES))
+ifneq ($(DTB_FILES),)
+DTSSUBDIR := /lge/$(LGE_TARGET_PLATFORM)-$(DTS_BASE_NAME)
+else
+DTSSUBDIR :=
+endif
+endif
 
 Image Image.gz: vmlinux
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
@@ -92,10 +105,18 @@ zinstall install: vmlinux
 	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@ DTC_FLAGS=$(DTC_FLAGS)
 
 dtbs: scripts
+ifneq ($(CONFIG_MTK_DTBO_FEATURE), y)
+	$(Q)$(MAKE) $(build)=$(boot)/dts$(DTSSUBDIR) DTB_FILES="$(DTB_FILES)" MACHINE=$(MACHINE) $@
+else
 	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs DTC_FLAGS=$(DTC_FLAGS)
+endif
 
 Image-dtb Image.gz-dtb: vmlinux scripts dtbs $(DTB_OVERLAY_IMAGE_TAGERT)
+ifneq ($(CONFIG_MTK_DTBO_FEATURE), y)
+	$(Q)$(MAKE) $(build)=$(boot) DTSSUBDIR=$(DTSSUBDIR) DTB_FILES="$(DTB_FILES)" MACHINE=$(MACHINE) $(boot)/$@
+else
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+endif
 
 PHONY += vdso_install
 vdso_install:

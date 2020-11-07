@@ -1,0 +1,72 @@
+/*
+ * LG Electronics mt6750 common function device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/*battery meter*/
+&bat_meter {
+	shutdown_gauge0 = <0 >;
+	shutdown_gauge1_xmins = <0 >;
+	batterypseudo1 = <1 >;
+	difference_hwocv_rtc = <20 >;
+	difference_hwocv_swocv = <20>;
+	difference_swocv_rtc = <30>;
+	/* keep min uisoc until voltage less than shutdown voltage */
+	cust_min_uisoc_percentage = <2 >;
+	/* don't use max_swocv value, only use shutdown_system_voltage */
+	max_swocv = <1>;
+
+	/* Battery Temperature Table */
+	rbat_pull_up_r = <62000>;
+	batt_temperature_table_size = <21>;
+	/* NTC 68 murata thermistor */
+	batt_temperature_table = <
+		(-20) 705455
+		(-15) 526560
+		(-10) 419501
+		(-5) 301416
+		0 230926
+		5 178290
+		10 138679
+		15 108615
+		20 85661
+		25 68000
+		30 54316
+		35 43644
+		40 35271
+		45 28666
+		50 23424
+		55 19244
+		60 15889
+		65 13183
+		70 10989
+		75 9021
+		80 7737 >;
+
+	/* cust_battery_meter.h */
+	r_charger_2 = <51 >;
+};
+
+/ {
+	reserved-memory {
+		smembackup-reserved-memory@46400000 {
+			compatible = "lge,smembackup";
+			reg = <0 0x46400000 0 0x20000>;
+		};
+		atfbackup-reserved-memory@46420000 {
+			compatible = "lge,atfbackup";
+			reg = <0 0x46420000 0 0x40000>;
+		};
+		atflogbackup-reserved-memory@46460000 {
+			compatible = "lge,atflogbackup";
+			reg = <0 0x46460000 0 0x30000>;
+		};
+		busdbgbackup-reserved-memory@46490000 {
+			compatible = "lge,busdbgbackup";
+			reg = <0 0x46490000 0 0x1000>;
+		};
+	};
+};

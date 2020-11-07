@@ -1,0 +1,48 @@
+
+/dts-v1/;
+
+#include "../muse6750_hdk_o_lge.dtsi"
+
+#include "../mt6750-common.dtsi"
+
+#include "mt6750-lv7_global_com-power.dtsi"
+#include "mt6750-lv7_global_com-panel.dtsi"
+#include "mt6750-lv7_global_com-touch.dtsi"
+#include "mt6750-lv7_global_com-sensor.dtsi"
+//#include "mt6750-lv7_global_com-fingerprint.dtsi"
+#include "mt6750-lv7_global_com-misc.dtsi"
+#include "mt6750-lv7_global_com-sound.dtsi"
+#include "mt6750-lv7_global_com-nfc.dtsi"
+#include "mt6750-lv7_global_com-common.dtsi"
+#include "mt6750-lv7_global_com-usb.dtsi"
+#include "mt6750-lv7_global_com-camera.dtsi"
+#include "mt6750-lv7_global_com-dtv.dtsi"
+
+/ {
+	/*
+	typedef enum {
+		HW_REV_0 = 0,
+		HW_REV_0_1,
+		HW_REV_A,
+		HW_REV_B,
+		HW_REV_C,
+		HW_REV_1_0,
+		HW_REV_1_1,
+		HW_REV_MAX
+	} rev_type;
+	*/
+	lge,pcb_revision = <0x4>; // rev_c
+};
+
+&bat_meter {
+	/* cust_battery_meter.h */
+	r_charger_2 = <39 >;
+};
+
+&cust_accel {
+	direction = <4>;
+};
+
+&cust_gyro {
+	direction = <4>;
+};

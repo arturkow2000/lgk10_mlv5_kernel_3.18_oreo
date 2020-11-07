@@ -1,0 +1,9 @@
+/*
+ * LG Electronics CV7 touch device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+#include "../mt6750-mcv7a_touch_common/mt6750-mcv7a-touch.dtsi"

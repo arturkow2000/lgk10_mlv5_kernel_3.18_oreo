@@ -1,0 +1,28 @@
+/*
+ * LG Electronics LV7 panel device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c0 {
+	/delete-node/ i2c_lcd_bias@3e;
+};
+
+&i2c1 {
+	i2c_lcd_bias@11 {
+		compatible = "mediatek,i2c_lcd_bias";
+		reg = <0x11>;
+		status = "okay";
+	};
+};
+
+/ {
+	led@6 {
+		compatible = "mediatek,lcd-backlight";
+		led_mode = <4>;
+		data = <1>;
+		pwm_config = <0 0 0 0 0>;
+	};
+};

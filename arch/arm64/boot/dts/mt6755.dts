@@ -2176,7 +2176,7 @@
 			compatible = "mediatek,bat_notify";
 		};
 
-		battery {
+		bat_comm: battery {
 			compatible = "mediatek,battery";
 		};
 
@@ -2184,7 +2184,7 @@
 			compatible = "mediatek,mt6755-flashlight";
 		};
 
-		bat_metter {
+		bat_meter: bat_metter {
 			compatible = "mediatek,bat_meter";
 			/* cust_charging.h */
 			/* stop charging while in talking mode */

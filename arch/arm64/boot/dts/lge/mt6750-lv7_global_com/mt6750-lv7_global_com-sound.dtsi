@@ -1,0 +1,109 @@
+/*
+ * LG Electronics LV7 sound device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/* AUDIO GPIO standardization */
+&audgpio {
+	pinctrl-names = "default", "audpmicclk-mode0", "audpmicclk-mode1",
+		"audi2s1-mode0", "audi2s1-mode1", "extamp-pullhigh", "extamp-pulllow",
+		"extamp2-pullhigh", "extamp2-pulllow", "rcvspk-pullhigh",
+		"rcvspk-pulllow";
+	pinctrl-0 = <&aud_pins_default>;
+	pinctrl-1 = <&aud_pins_pmicclk_mode0>;
+	pinctrl-2 = <&aud_pins_pmicclk_mode1>;
+	pinctrl-3 = <&aud_pins_i2s1_mode0>;
+	pinctrl-4 = <&aud_pins_i2s1_mode1>;
+	pinctrl-5 = <&aud_pins_extamp_high>;
+	pinctrl-6 = <&aud_pins_extamp_low>;
+	pinctrl-7 = <&aud_pins_extamp2_high>;
+	pinctrl-8 = <&aud_pins_extamp2_low>;
+	pinctrl-9 = <&aud_pins_rcvspk_high>;
+	pinctrl-10 = <&aud_pins_rcvspk_low>;
+	/delete-property/ pinctrl-11;
+	/delete-property/ pinctrl-12;
+	status = "okay";
+};
+
+&accdet {
+	interrupt-parent = <&eintc>;
+	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+	debounce = <0 256000>;
+	status = "okay";
+
+	accdet-mic-vol = <7>;
+	headset-mode-setting = <0x500 0x500 1 0x1f0 0x210 0x210 0x20>;
+	accdet-plugout-debounce = <20>;
+	/*1:ACC mode, 2:low cost without in bias, 6:low cost with in bias*/
+	accdet-mic-mode = <1>;
+	/*0--MD_MAX--UP_MAX--DW_MAX*/
+	headset-three-key-threshold = <0 63 189 430>;
+	/*0--MD_MAX--VOICE_MAX--UP_MAX--DW_MAX*/
+	headset-four-key-threshold = <0 63 100 189 430>;
+
+	pinctrl-names = "default", "state_eint_as_int";
+	pinctrl-0 = <&accdet_pins_default>;
+	pinctrl-1 = <&accdet_pins_eint_as_int>;
+};
+
+&odm {
+/* audio ext amp */
+	ext_spk_amp {
+		compatible = "ti,tpa2015d";
+		status = "okay";
+		ti,gpio-control = <1>;
+		pinctrl-names = "aud_spk_sw_default", "aud_spk_sw_off", "aud_spk_sw_on";
+		pinctrl-0 = <&aud_spk_sw_default>;
+		pinctrl-1 = <&aud_spk_sw_off>;
+		pinctrl-2 = <&aud_spk_sw_on>;
+	};
+};
+
+&pio {
+/* audio ext amp */
+	aud_spk_sw_default: aud_spk_sw_default {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO115__FUNC_GPIO115>;
+			slew-rate = <1>; // output
+			bias-disable; // output
+			output-low;
+			input-schmitt-enable = <0>;
+		};
+	};
+
+	aud_spk_sw_off: aud_spk_sw_off {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO115__FUNC_GPIO115>;
+			slew-rate = <1>; // output
+			output-low;
+		};
+	};
+
+	aud_spk_sw_on: aud_spk_sw_on {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO115__FUNC_GPIO115>;
+			slew-rate = <1>; // output
+			output-high;
+		};
+	};
+
+/* HPH_AMP_SW */
+	/delete-node/ audhpdepophigh;
+
+	/delete-node/ audhpdepoplow;
+
+/* accdet */
+	accdet_pins_default: accdet_pins_default {
+	};
+	accdet_pins_eint_as_int: accdet_pins_eint_as_int {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO0__FUNC_GPIO0>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
+
+};

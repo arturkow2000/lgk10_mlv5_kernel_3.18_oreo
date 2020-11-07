@@ -1,0 +1,315 @@
+/*
+ * LG Electronics LV7V touch device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&odm {
+	dtv: dtv {
+		compatible = "mediatek,dtv";
+	};
+	dtv_lna: dtv_lna {
+		compatible = "lge,dtv_lna";
+		status = "diasbled";
+	};
+	dtv_ant_switch: dtv_ant_switch {
+		compatible = "lge,dtv_ant_switch";
+		status = "diasbled";
+	};
+};
+
+&spi1 {
+	/* just configure clock frequency by changing clock-div value */
+	clock-div = <6>;
+
+	dtv {
+		compatible = "broadcast,tdmb";
+		status = "okay";
+	};
+};
+
+&dtv {
+	/*set interrupt configure here to register irq function,
+	set interrupt pin number and interrupt mode(0x2022 = IRQF_ONESHOT | IRQF_DISABLED | IRQF_TRIGGER_FALLING)*/
+	interrupt-parent = <&eintc>;
+	interrupts = <12 0x2022>;
+
+	/*set gpio configure here*/
+	spi-bus-num = <1>;
+
+	/*set hw configure here
+	when use pmic clk buffer, change use-xtal to 0, and set xtal-freq value*/
+	use-xtal = <0>;
+	xtal-freq = <26000>;
+
+	pinctrl-names = "default",
+			"miso_spi", "miso_pullhigh", "miso_pulllow", "miso_pulldisable",
+			"mosi_spi","mosi_pullhigh","mosi_pulllow", "mosi_pulldisable",
+			"cs_spi","cs_pullhigh","cs_pulllow","cs_pulldisable",
+			"clk_spi","clk_pullhigh","clk_pulllow","clk_pulldisable",
+			"en_high", "en_low",
+			"irq_low", "irq_disable";
+
+	pinctrl-0 = <&tdmb_default>;
+	pinctrl-1 = <&tdmb_miso_spi>;
+	pinctrl-2 = <&tdmb_miso_pullhigh>;
+	pinctrl-3 = <&tdmb_miso_pulllow>;
+	pinctrl-4 = <&tdmb_miso_pulldisable>;
+	pinctrl-5 = <&tdmb_mosi_spi>;
+	pinctrl-6 = <&tdmb_mosi_pullhigh>;
+	pinctrl-7 = <&tdmb_mosi_pulllow>;
+	pinctrl-8 = <&tdmb_mosi_pulldisable>;
+	pinctrl-9 = <&tdmb_cs_spi>;
+	pinctrl-10 = <&tdmb_cs_pullhigh>;
+	pinctrl-11 = <&tdmb_cs_pulllow>;
+	pinctrl-12 = <&tdmb_cs_pulldisable>;
+	pinctrl-13 = <&tdmb_clk_spi>;
+	pinctrl-14 = <&tdmb_clk_pullhigh>;
+	pinctrl-15 = <&tdmb_clk_pulllow>;
+	pinctrl-16 = <&tdmb_clk_pulldisable>;
+	pinctrl-17 = <&tdmb_en_high>;
+	pinctrl-18 = <&tdmb_en_low>;
+	pinctrl-19 = <&tdmb_irq_pulllow>;
+	pinctrl-20 = <&tdmb_irq_pulldisable>;
+
+	status = "okay";
+};
+
+&dtv_lna {
+	pinctrl-names = "default",
+		        "lna_high", "lna_low",
+                        "lna_en_high", "lna_en_low";
+
+        pinctrl-0 = <&tdmb_default>;
+        pinctrl-1 = <&tdmb_lna_high>;
+        pinctrl-2 = <&tdmb_lna_low>;
+        pinctrl-3 = <&tdmb_lna_en_high>;
+        pinctrl-4 = <&tdmb_lna_en_low>;
+
+        status = "disabled";
+};
+
+&dtv_ant_switch {
+	pinctrl-names = "default",
+		        "ant_sw_enable", "ant_sw_disable";
+
+        pinctrl-0 = <&tdmb_default>;
+        pinctrl-1 = <&tdmb_ant_sw_enable>;
+        pinctrl-2 = <&tdmb_ant_sw_disable>;
+
+	status = "okay";
+};
+
+&pio {
+	tdmb_default: state_tdmb_default {
+	};
+
+	tdmb_miso_spi: state_tdmb_miso_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO25__FUNC_SPI1_A_MI>;
+		};
+	};
+
+	tdmb_miso_pullhigh: state_tdmb_miso_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO25__FUNC_GPIO25>;
+			slew-rate = <1>;
+			bias-pull-up;/*pull up the pin*/
+		};
+	};
+
+	tdmb_miso_pulllow: state_tdmb_miso_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO25__FUNC_GPIO25>;
+			slew-rate = <1>;
+			bias-pull-down; /*pull down the pin*/
+		};
+	};
+
+	tdmb_miso_pulldisable: state_tdmb_miso_pulldisable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO25__FUNC_GPIO25>;
+			slew-rate = <1>;
+			bias-disable; /*pull down the pin*/
+		};
+	};
+
+	tdmb_mosi_spi: state_tdmb_mosi_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO27__FUNC_SPI1_A_MO>;
+		};
+	};
+
+	tdmb_mosi_pullhigh: state_tdmb_mosi_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO27__FUNC_GPIO27>;
+			slew-rate = <1>;
+			bias-pull-up;
+		};
+	};
+
+	tdmb_mosi_pulllow: state_tdmb_mosi_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO27__FUNC_GPIO27>;
+			slew-rate = <1>;
+			bias-pull-down;
+		};
+	};
+
+	tdmb_mosi_pulldisable: state_tdmb_mosi_pulldisable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO27__FUNC_GPIO27>;
+			slew-rate = <1>;
+			bias-disable;
+		};
+	};
+
+	tdmb_cs_spi: state_tdmb_cs_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO26__FUNC_SPI1_A_CSB>;
+		};
+	};
+
+	tdmb_cs_pullhigh: state_tdmb_cs_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO26__FUNC_GPIO26>;
+			slew-rate = <1>;
+			bias-pull-up;
+		};
+	};
+
+	tdmb_cs_pulllow: state_tdmb_cs_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO26__FUNC_GPIO26>;
+			slew-rate = <1>;
+			bias-pull-down;
+		};
+	};
+
+	tdmb_cs_pulldisable: state_tdmb_cs_pulldisable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO26__FUNC_GPIO26>;
+			slew-rate = <1>;
+			bias-disable;
+		};
+	};
+
+	tdmb_clk_spi: state_tdmb_clk_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO28__FUNC_SPI1_A_CLK>;
+		};
+	};
+
+	tdmb_clk_pullhigh: state_tdmb_clk_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO28__FUNC_GPIO28>;
+			slew-rate = <1>;
+			bias-pull-up;
+		};
+	};
+
+	tdmb_clk_pulllow: state_tdmb_clk_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO28__FUNC_GPIO28>;
+			slew-rate = <1>;
+			bias-pull-down;
+		};
+	};
+
+	tdmb_clk_pulldisable: state_tdmb_clk_pulldisable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO28__FUNC_GPIO28>;
+			slew-rate = <1>;
+			bias-disable;
+		};
+	};
+
+	tdmb_en_high: state_tdmb_en_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+			slew-rate = <1>; /*direction 0:in, 1:out*/
+			output-high;
+			bias-pull-down;
+		};
+	};
+
+	tdmb_en_low: state_tdmb_en_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+			slew-rate = <1>; /*direction 0:in, 1:out*/
+			output-low; /* set the pin to output mode with low level */
+			bias-pull-down;
+		};
+	};
+
+	tdmb_irq_pulllow: state_tdmb_irq_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO12__FUNC_GPIO12>;
+			slew-rate = <0>; /*direction 0:in, 1:out*/
+			output-high;/* set the pin to output mode with high level */
+			bias-pull-down;
+		};
+	};
+
+	tdmb_irq_pulldisable: state_tdmb_irq_disable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO12__FUNC_GPIO12>;
+			slew-rate = <0>; /*direction 0:in, 1:out*/
+			bias-disable;
+		};
+	};
+
+	tdmb_lna_high: state_tdmb_lna_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO53__FUNC_GPIO53>;
+			slew-rate = <1>; /*direction 0:in, 1:out*/
+			output-high;
+			bias-pull-down;
+		};
+	};
+
+	tdmb_lna_low: state_tdmb_lna_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO53__FUNC_GPIO53>;
+			slew-rate = <1>; /*direction 0:in, 1:out*/
+			output-low; /* set the pin to output mode with low level */
+			bias-pull-down;
+		};
+	};
+
+	tdmb_lna_en_high: state_tdmb_lna_en_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO56__FUNC_GPIO56>;
+			slew-rate = <1>; /*direction 0:in, 1:out*/
+			output-high; /* set the pin to output mode with high level */
+			bias-pull-down;
+		};
+	};
+
+	tdmb_lna_en_low: state_tdmb_lna_en_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO56__FUNC_GPIO56>;
+			slew-rate = <1>; /*direction 0:in, 1:out*/
+			output-low; /* set the pin to output mode with low level */
+			bias-pull-down;
+		};
+	};
+
+	tdmb_ant_sw_enable: state_tdmb_ant_sw_enable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO116__FUNC_GPIO116>;
+			slew-rate = <1>; /* direction 0 :in, 1 : out */
+			output-low;
+		};
+	};
+
+	tdmb_ant_sw_disable: state_tdmb_ant_sw_disable {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO116__FUNC_GPIO116>;
+			slew-rate = <1>; /* direction 0 : in, 1 : out */
+			output-high;
+		};
+	};
+};

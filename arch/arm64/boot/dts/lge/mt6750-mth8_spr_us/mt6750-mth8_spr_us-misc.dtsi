@@ -1,0 +1,128 @@
+/*
+ * LG Electronics TH8 misc device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&odm {
+	vibrator0:vibrator@0 {
+		compatible = "mediatek,vibrator";
+		vib_timer = <25>;
+		vib_limit = <9>;
+		vib_vol= <6>;
+	};
+};
+
+&i2c3 {
+	epack: epack@36 {
+		compatible = "em-tech,epack";
+		status = "ok";
+
+		reg = <0x36>;
+
+		interrupt-parent = <&eintc>;
+		interrupts = <12 IRQ_TYPE_LEVEL_HIGH>,
+				<87 IRQ_TYPE_LEVEL_HIGH>,
+				<6 IRQ_TYPE_LEVEL_HIGH>;
+		debounce = <12 0>,
+				<87 0>,
+				<6 0>;
+
+		gpio = <&pio 12 0>, /* EPID */
+			<&pio 87 0>,	/* VIN_AVA */
+			<&pio 6 0>,	/* VCHG_DET */
+			<&pio 14 0>,	/* VIN_SEL */
+			<&pio 37 0>;	/* VBUS_SWITCH_EN */
+
+		pinctrl-names = "init",
+				"usb_main",
+				"usb_epack",
+				"pwr_main",
+				"pwr_epack";
+		pinctrl-0 = <&epack_init>;
+		pinctrl-1 = <&epack_usb_main>;
+		pinctrl-2 = <&epack_usb_epack>;
+		pinctrl-3 = <&epack_pwr_main>;
+		pinctrl-4 = <&epack_pwr_epack>;
+	};
+};
+
+&pio {
+	epack_init: init {
+		ep_det {
+			pins = <PINMUX_GPIO12__FUNC_GPIO12>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+		vchg_det {
+			pins = <PINMUX_GPIO6__FUNC_GPIO6>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+		df_in {
+			pins = <PINMUX_GPIO86__FUNC_GPIO86>;
+			slew-rate = <1>;
+			output-low;
+		};
+		vin_ava {
+			pins = <PINMUX_GPIO87__FUNC_GPIO87>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
+
+	epack_usb_main: usb_main {
+		usb_switch_s {
+			pins = <PINMUX_GPIO7__FUNC_GPIO7>;
+			slew-rate = <1>;
+			output-low;
+		};
+		usb_switch_oe {
+			pins = <PINMUX_GPIO9__FUNC_GPIO9>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+	
+	epack_usb_epack: usb_epack {
+		usb_switch_s {
+			pins = <PINMUX_GPIO7__FUNC_GPIO7>;
+			slew-rate = <1>;
+			output-high;
+		};
+		usb_switch_oe {
+			pins = <PINMUX_GPIO9__FUNC_GPIO9>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+	
+	epack_pwr_main: pwr_main {
+		vin_sel {
+			pins = <PINMUX_GPIO14__FUNC_GPIO14>;
+			slew-rate = <1>;
+			output-high;
+		};
+		vbus_switch_en {
+			pins = <PINMUX_GPIO37__FUNC_GPIO37>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	epack_pwr_epack: pwr_epack {
+		vin_sel {
+			pins = <PINMUX_GPIO14__FUNC_GPIO14>;
+			slew-rate = <1>;
+			output-low;
+		};
+		vbus_switch_en {
+			pins = <PINMUX_GPIO37__FUNC_GPIO37>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+};

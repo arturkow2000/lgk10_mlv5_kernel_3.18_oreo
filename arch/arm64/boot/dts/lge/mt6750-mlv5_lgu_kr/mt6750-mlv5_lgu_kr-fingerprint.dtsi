@@ -1,0 +1,146 @@
+/*
+ * LG Electronics LV5 fingerprint device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+/{
+	#include "../gf3208.dtsi"
+};
+
+&spi0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	#include "../gf3208_spi.dtsi"
+};
+
+&pio {
+	gf_default: state_gf_default {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO20__FUNC_GPIO20>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
+
+	gf_miso_spi: state_gf_miso_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO95__FUNC_SPI0_MI>;
+		};
+	};
+
+	gf_miso_pullhigh: state_gf_miso_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO95__FUNC_GPIO95>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	gf_miso_pulllow: state_gf_miso_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO95__FUNC_GPIO95>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	gf_reset_high: state_gf_reset_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	gf_reset_low: state_gf_reset_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	gf_mosi_spi: state_gf_mosi_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO97__FUNC_SPI0_MO>;
+		};
+	};
+
+	gf_mosi_pullhigh: state_gf_mosi_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO97__FUNC_GPIO97>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	gf_mosi_pulllow: state_gf_mosi_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO97__FUNC_GPIO97>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	gf_cs_spi: state_gf_cs_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_SPI0_CSB>;
+		};
+	};
+
+	gf_cs_pullhigh: state_gf_cs_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	gf_cs_pulllow: state_gf_cs_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	gf_clk_spi: state_gf_clk_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO98__FUNC_SPI0_CLK>;
+		};
+	};
+	gf_clk_pullhigh: state_gf_clk_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO98__FUNC_GPIO98>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	gf_clk_pulllow: state_gf_clk_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO98__FUNC_GPIO98>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	gf_ldo_high: state_gf_ldo_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO21__FUNC_GPIO21>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	gf_ldo_low: state_gf_ldo_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO21__FUNC_GPIO21>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+};

@@ -1,0 +1,23 @@
+/*
+ * LG Electronics LV5 touch device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c1 {
+	pn547@28 {
+		compatible = "nxp,pn547";
+		reg = <0x28>;
+		status = "okay";
+
+		interrupt-parent = <&eintc>;
+		interrupts = <13 IRQ_TYPE_EDGE_RISING>;//<PINMUX_GPIO13__FUNC_GPIO13 IRQ_TYPE_EDGE_RISING>;
+		debounce = <2 0>;
+
+		nxp,gpio_ven = <15>;//<PINMUX_GPIO15__FUNC_GPIO15>;
+		nxp,gpio_mode = <59>;//<PINMUX_GPIO59__FUNC_GPIO59>;
+		nxp,gpio_irq = <13>;//<PINMUX_GPIO13__FUNC_GPIO13>;
+	};
+};

@@ -1,0 +1,20 @@
+/*
+ * LG Electronics bmp280 sensor device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+cust_baro: cust_baro@76 {
+	compatible = "mediatek,bmp280";
+	reg = <0x76>;
+	status = "okay";
+	i2c_num = <1>;
+	i2c_addr = <0x76 0 0 0>;
+	direction = <0>;
+	power_id = <0xffff>;
+	power_vol = <0>;
+	firlen = <0>;
+	is_batch_supported = <0>;
+};

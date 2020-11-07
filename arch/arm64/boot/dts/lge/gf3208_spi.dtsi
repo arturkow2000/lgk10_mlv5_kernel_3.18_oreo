@@ -1,0 +1,7 @@
+fingerprint@0 {
+	status = "okay";
+	compatible = "goodix,goodix-fp";
+	reg = <0>;
+	spi-bus-num = <0>;
+	spi-max-frequency = <8000000>;
+};

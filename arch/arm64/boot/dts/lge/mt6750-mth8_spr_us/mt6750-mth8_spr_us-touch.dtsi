@@ -1,0 +1,106 @@
+/*
+ * LG Electronics TH8 touch device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+&i2c0 {
+	cap_touch@5d {
+		status = "disable";
+    };
+
+	focaltech@38 {
+		compatible = "focaltech,ft5526";
+		status = "okay";
+
+		reg = <0x38>;
+		interrupt-parent = <&eintc>;
+		interrupts = <1 0x2002>; // #define IRQF_ONESHOT	0x00002000 IRQF_TRIGGER_FALLING 0x00000002 #define IRQF_NO_SUSPEND		0x00004000
+		debounce = <1 0>;
+		irqflags = <0x2002>;
+
+		irq-gpio = <&pio 1 0x2002>;
+		pinctrl-names = "default", "touch_pin_active", "touch_pin_sleep";   /* Touch GPIO pin name setting */
+		pinctrl-0 = <&ts_pin_default>;
+		pinctrl-1 = <&ts_pin_active>;       /* Touch GPIO pin active setting */
+		pinctrl-2 = <&ts_pin_suspend>;      /* Touch GPIO pin suspend setting */
+
+		reset-gpio = <&pio 10 0x0>;
+
+		vdd-supply = <&mt_pmic_vldo28_ldo_reg>;
+		hw_reset_delay = <200>;
+
+		/*Caps*/
+		max_x = <800>;
+		max_y = <1280>;
+		max_pressure = <0xff>;
+		max_width = <15>;
+		max_orientation = <1>;
+		max_id = <10>;
+
+		/* Role */
+		use_lpwg = <1>;
+		use_lpwg_test = <1>;
+		hide_coordinate = <1>;
+
+		/* firmware & panel_spec path */
+		use_fw_upgrade = <1>;
+		use_firmware = <0>;
+
+		fw_image = "touch/th8/focaltech/FT5X46_Pramboot_v0.5_20151012.img", "touch/th8/focaltech/LG_TH8_5526_Ver1.12_20170801_all.img";
+		panel_spec = "touch/th8/focaltech/th8_limit.txt";
+		panel_spec_mfts_folder = "touch/th8/focaltech/th8_limit_mfts.txt";
+	};
+};
+
+/* TOUCH start */
+&touch {
+/*
+	tpd-resolution = <1080 1920>;
+	use-tpd-button = <0>;
+	tpd-key-num = <3>;
+	tpd-key-local= <139 172 158 0>;
+	tpd-key-dim-local = <90 883 100 40 230 883 100 40 370 883 100 40 0 0 0 0>;
+	tpd-max-touch-num = <10>;
+	tpd-filter-enable = <1>;
+	tpd-filter-pixel-density = <146>;
+	tpd-filter-custom-prameters = <0 0 0 0 0 0 0 0 0 0 0 0>;
+	tpd-filter-custom-speed = <0 0 0>;
+	pinctrl-names = "default", "state_eint_as_int", "state_eint_output0", "state_eint_output1",
+		"state_rst_output0", "state_rst_output1";
+	pinctrl-0 = <&ctp_pins_default>;
+	pinctrl-1 = <&ctp_pins_eint_as_int>;
+	pinctrl-2 = <&ctp_pins_eint_output0>;
+	pinctrl-3 = <&ctp_pins_eint_output1>;
+	pinctrl-4 = <&ctp_pins_rst_output0>;
+	pinctrl-5 = <&ctp_pins_rst_output1>;
+	status = "okay";
+*/
+	status = "disable";
+};
+
+/* touch gpio start */
+&pio {
+    ts_pin_default: ts_default {
+    };
+    ts_pin_active: ts_active {
+        pins_cmd0_dat {
+            pins = <PINMUX_GPIO10__FUNC_GPIO10>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+			//slew-rate = <1>;
+			//output-low;
+        };
+    };
+    ts_pin_suspend: ts_suspend {
+        pins_cmd0_dat {
+            pins = <PINMUX_GPIO10__FUNC_GPIO10>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+			//slew-rate = <1>;
+			//output-high;
+        };
+    };
+};
+/* TOUCH end */
