@@ -615,10 +615,12 @@ void arch_reset(char mode, const char *cmd)
 #endif
 //[LGE_UPDATE_S] DMS_SYSTEM dms-fota@lge.com
     } else if (cmd && !strcmp(cmd, "fota")) {
+#ifdef CONFIG_LGE_HANDLE_PANIC
         lge_set_reboot_reason(LGE_REBOOT_REASON_FOTA);
+#endif
         reboot = 1;
 //[LGE_UPDATE_E] DMS_SYSTEM dms-fota@lge.com
-#ifdef CONFIG_LGE_LCD_OFF_DIMMING
+#if defined(CONFIG_LGE_LCD_OFF_DIMMING) && defined(CONFIG_LGE_HANDLE_PANIC)
 	} else if (cmd && !strcmp(cmd, "LCD off")) {
 		lge_set_reboot_reason(LGE_REBOOT_REASON_LCD_OFF);
 		reboot = 1;

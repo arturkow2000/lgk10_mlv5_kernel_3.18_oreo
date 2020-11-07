@@ -275,7 +275,7 @@ static ssize_t store_level(struct device *dev,
 	return size;
 
 error:
-	printk(KERN_WARNING "wrong value : %s, size = %d\n", buf, strlen(buf));
+	printk(KERN_WARNING "wrong value : %s, size = %lu\n", buf, (long unsigned int)strlen(buf));
 	return -EINVAL;
 }
 

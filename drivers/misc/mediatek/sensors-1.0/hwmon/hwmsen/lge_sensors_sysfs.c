@@ -137,7 +137,7 @@ static int sensors_sysfs_make_path(void)
 		return -ENOMEM;
 	}
 
-	pr_info("%s : alloc group_table size %d", __func__, arr_cnt * sizeof(struct parent_entry_table));
+	pr_info("%s : alloc group_table size %lu", __func__, (long unsigned int)arr_cnt * (long unsigned int)sizeof(struct parent_entry_table));
 	group_table = kzalloc(arr_cnt * sizeof(struct parent_entry_table), GFP_KERNEL);
 	if (group_table == NULL) {
 		pr_err("%s : ERROR kzalloc group_table failed\n", __func__);

@@ -233,8 +233,10 @@ void die(const char *str, struct pt_regs *regs, int err)
 	if (ESR_EL1_EC(err) == ESR_EL1_EC_DABT_EL1)
 		thread->cpu_excp++;
 
+#ifdef CONFIG_MTK_AEE_AED_DEBUG
 	if (die_owner == -1)
 		aee_save_excp_regs(regs);
+#endif
 
 	oops_enter();
 

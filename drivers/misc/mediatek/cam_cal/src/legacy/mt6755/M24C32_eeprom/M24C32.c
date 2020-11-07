@@ -12,7 +12,7 @@
 #include <linux/uaccess.h>
 #include <linux/slab.h>
 #include <linux/fs.h>
-#include "kd_camera_hw.h"
+#include <kd_camera_hw.h>
 #include "eeprom.h"
 #include "eeprom_define.h"
 #include "M24C32.h"
@@ -26,9 +26,9 @@
 #include <linux/uaccess.h>
 #include <linux/slab.h>
 #include <linux/fs.h>
-#include "kd_camera_hw.h"
-#include "cam_cal.h"
-#include "cam_cal_define.h"
+//#include "kd_camera_hw.h"
+#include <cam_cal.h>
+#include <cam_cal_define.h>
 
 #include "M24C32.h"
 //#include <asm/system.h>  // for SMP
@@ -279,7 +279,7 @@ static long EEPROM_Ioctl(
         EEPROMDB("[M24C32_EEPROM] ioctl allocate mem failed\n");
         return -ENOMEM;
     }
-     EEPROMDB("[M24C32_EEPROM] init Working buffer address 0x%8x  command is 0x%8x\n", (u32)pWorkingBuff, (u32)a_u4Command);
+     EEPROMDB("[M24C32_EEPROM] init Working buffer address 0x%8lx  command is 0x%8lx\n", (long unsigned int)(uintptr_t)pWorkingBuff, (long unsigned int)(uintptr_t)a_u4Command);
 
 
     if(copy_from_user((u8*)pWorkingBuff ,  (u8*)ptempbuf->pu1Params, ptempbuf->u4Length))
@@ -318,7 +318,7 @@ static long EEPROM_Ioctl(
 #endif
             EEPROMDB("[EEPROM] offset %x \n", ptempbuf->u4Offset);
             EEPROMDB("[EEPROM] length %x \n", ptempbuf->u4Length);
-            EEPROMDB("[EEPROM] Before read Working buffer address 0x%8x \n", (u32)pWorkingBuff);
+            EEPROMDB("[EEPROM] Before read Working buffer address 0x%8lx \n", (unsigned long int)(uintptr_t)pWorkingBuff);
 
             if(4 <= ptempbuf->u4Length )
 			{
@@ -384,7 +384,7 @@ static long EEPROM_Ioctl(
     {
         //copy data to user space buffer, keep other input paremeter unchange.
         EEPROMDB("[M24C32_EEPROM] to user length %d \n", ptempbuf->u4Length);
-        EEPROMDB("[M24C32_EEPROM] to user  Working buffer address 0x%8x \n", (u32)pWorkingBuff);
+        EEPROMDB("[M24C32_EEPROM] to user  Working buffer address 0x%8lx \n", (unsigned long int)(uintptr_t)pWorkingBuff);
         if(copy_to_user((u8 __user *) ptempbuf->pu1Params , (u8 *)pWorkingBuff , ptempbuf->u4Length))
         {
             kfree(pBuff);
