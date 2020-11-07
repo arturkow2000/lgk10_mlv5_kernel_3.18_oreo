@@ -1,0 +1,12 @@
+config MTK_FREQ_HOPPING
+    tristate "MediaTek FREQHOPPING driver"
+    default N
+    help
+      FREQHOPPING driver support for MediaTek SOC
+      If you want to use MediaTek FREQHOPPING driver, say Y or M here.If unsure, say N.
+
+config MTK_MSDC_SSC_CONTROL
+    bool "eMMC, SDCARD SSC control on"
+    default N
+    help
+      FREQHOPPING set for SSC control

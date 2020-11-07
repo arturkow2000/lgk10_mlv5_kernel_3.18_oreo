@@ -1,0 +1,8 @@
+config MTK_K2HH_ACC
+	bool "K2HH for MediaTek package"
+	default n
+	help
+	  It support different accelerometer sensor.
+          If this option is set,
+	  it will support
+          K2hh Accelerometer.

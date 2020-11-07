@@ -1,0 +1,228 @@
+/*
+ * LG Electronics CV7 sound device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/* AUDIO GPIO standardization */
+&audgpio {
+	pinctrl-names = "default", "audpmicclk-mode0", "audpmicclk-mode1",
+		"audi2s1-mode0", "audi2s1-mode1", "extamp-pullhigh", "extamp-pulllow",
+		"extamp2-pullhigh", "extamp2-pulllow", "rcvspk-pullhigh",
+		"rcvspk-pulllow";
+	pinctrl-0 = <&aud_pins_default>;
+	pinctrl-1 = <&aud_pins_pmicclk_mode0>;
+	pinctrl-2 = <&aud_pins_pmicclk_mode1>;
+	pinctrl-3 = <&aud_pins_i2s1_mode0>;
+	pinctrl-4 = <&aud_pins_i2s1_mode1>;
+	pinctrl-5 = <&aud_pins_extamp_high>;
+	pinctrl-6 = <&aud_pins_extamp_low>;
+	pinctrl-7 = <&aud_pins_extamp2_high>;
+	pinctrl-8 = <&aud_pins_extamp2_low>;
+	pinctrl-9 = <&aud_pins_rcvspk_high>;
+	pinctrl-10 = <&aud_pins_rcvspk_low>;
+	status = "okay";
+};
+
+&i2c3 {
+	es9218-codec@48 {
+		compatible = "dac,es9218-codec";
+		status = "ok";
+
+		reg = <0x48>;
+
+		pinctrl-names = "default", "hifi_reset_off", "hifi_reset_on", "hifi_ldo_off", "hifi_ldo_on";
+		pinctrl-0 = <&hifi_default>;
+		pinctrl-1 = <&hifi_reset_pin_off>;
+		pinctrl-2 = <&hifi_reset_pin_on>;
+		pinctrl-3 = <&hifi_ldo_power_off>;
+		pinctrl-4 = <&hifi_ldo_power_on>;
+	};
+};
+
+&pio {
+/* HiFi DAC */
+	hifi_default: hifi_default {
+	};
+
+	hifi_reset_pin_off: hifi_reset_pin_off {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO5__FUNC_GPIO5>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	hifi_reset_pin_on: hifi_reset_pin_on {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO5__FUNC_GPIO5>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	hifi_ldo_power_off: hifi_ldo_power_off {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO12__FUNC_GPIO12>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	hifi_ldo_power_on: hifi_ldo_power_on {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO12__FUNC_GPIO12>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+};
+
+&accdet {
+	interrupt-parent = <&eintc>;
+	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+	debounce = <0 256000>;
+	status = "okay";
+
+	accdet-mic-vol = <7>;
+	headset-mode-setting = <0x500 0x500 1 0x1f0 0x800 0x800 0x20>;
+	accdet-plugout-debounce = <20>;
+	/*1:ACC mode, 2:low cost without in bias, 6:low cost with in bias*/
+	accdet-mic-mode = <1>;
+	/*0--MD_MAX--UP_MAX--DW_MAX*/
+	headset-three-key-threshold = <0 63 189 430>;
+	/*0--MD_MAX--VOICE_MAX--UP_MAX--DW_MAX*/
+	headset-four-key-threshold = <0 63 100 189 430>;
+
+	pinctrl-names = "default", "state_eint_as_int";
+	pinctrl-0 = <&accdet_pins_default>;
+	pinctrl-1 = <&accdet_pins_eint_as_int>;
+};
+
+&odm {
+/* audio ext amp */
+	ext_spk_amp {
+		compatible = "ti,tpa2015d";
+		status = "okay";
+		ti,gpio-control = <0>;
+		ti,amp-gpio = <6>;
+	};
+};
+
+&pio {
+
+/* MTK Original */
+	aud_pins_default: audiodefault {
+	};
+
+	aud_pins_pmicclk_mode0: pmicclkmode0 {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO149__FUNC_GPIO149>;
+		};
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO150__FUNC_GPIO150>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+		pins_cmd2_dat {
+			pins = <PINMUX_GPIO151__FUNC_GPIO151>;
+		};
+	};
+
+	aud_pins_pmicclk_mode1: pmicclkmode1 {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO149__FUNC_AUD_CLK_MOSI>;
+		};
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO150__FUNC_AUD_DAT_MOSI>;
+		};
+		pins_cmd2_dat {
+			pins = <PINMUX_GPIO151__FUNC_AUD_DAT_MISO>;
+		};
+	};
+
+	aud_pins_i2s1_mode0: audi2s1mode0 {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO20__FUNC_GPIO20>;
+		};
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO19__FUNC_GPIO19>;
+		};
+		pins_cmd2_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+		};
+	};
+
+	aud_pins_i2s1_mode1: audi2s1mode1 {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO20__FUNC_I2S1_DO>;
+		};
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO19__FUNC_I2S1_LRCK>;
+		};
+		pins_cmd2_dat {
+			pins = <PINMUX_GPIO18__FUNC_I2S1_BCK>;
+		};
+	};
+
+	aud_pins_extamp_high: audexamphigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO115__FUNC_GPIO115>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	aud_pins_extamp_low: audexamplow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO115__FUNC_GPIO115>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	aud_pins_extamp2_high: audexam2phigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO54__FUNC_GPIO54>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+	aud_pins_extamp2_low: audexamp2low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO54__FUNC_GPIO54>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	aud_pins_rcvspk_high: audrcvspkhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO120__FUNC_GPIO120>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	aud_pins_rcvspk_low: audrcvspklow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO120__FUNC_GPIO120>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	/* accdet */
+	accdet_pins_default: accdet_pins_default {
+	};
+	accdet_pins_eint_as_int: accdet_pins_eint_as_int {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO0__FUNC_GPIO0>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
+};
+/* AUDIO end */

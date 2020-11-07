@@ -1,0 +1,15 @@
+
+#
+# Broadcast Device Driver Support
+#
+
+menu "LGE Japanese/Latin Mobile Broadcast(ISDB-T 1seg/ISDB-Tmm 13seg) Device Support"
+
+config LGE_BROADCAST_ONESEG_FC8180
+	bool "1Seg broacast tuner chipset fc8180 device driver"
+	depends on LGE_BROADCAST_SBTVD_LATIN
+	default y
+	help
+	  Select this if you want to use Japanese/Latin 1Seg mobile broadcast service
+
+endmenu

@@ -1,0 +1,102 @@
+/*
+ * LG Electronics TH8 panel device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&odm {
+	lcd_bias:lcd_bias {
+	compatible = "mediatek,gpio_lcd_bias";
+	};
+};
+
+&i2c0 {
+	i2c_lcd_bias@3e {
+		compatible = "mediatek,i2c_lcd_bias";
+		reg = <0x3e>;
+		status = "okay";
+	};
+};
+
+&lcd_bias {
+	pinctrl-names = "default", "lcd_bias_gpio_enp0", "lcd_bias_gpio_enp1", "lcd_bias_gpio_enn0", "lcd_bias_gpio_enn1";
+	pinctrl-0 = <&lcd_bias_pins_default>;
+	pinctrl-1 = <&lcd_bias_pins_enp0>;
+	pinctrl-2 = <&lcd_bias_pins_enp1>;
+	pinctrl-3 = <&lcd_bias_pins_enn0>;
+	pinctrl-4 = <&lcd_bias_pins_enn1>;
+	status = "okay";
+};
+
+&pio {
+	lcd_bias_pins_enp0: lcd_bias_gpio_enp0 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO83__FUNC_GPIO83>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	lcd_bias_pins_enp1: lcd_bias_gpio_enp1 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO83__FUNC_GPIO83>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	lcd_bias_pins_enn0: lcd_bias_gpio_enn0 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO54__FUNC_GPIO54>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	lcd_bias_pins_enn1: lcd_bias_gpio_enn1 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO54__FUNC_GPIO54>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	lcd_bias_pins_default: default {
+	};
+};
+
+&odm {
+	led@0 {
+		compatible = "mediatek,red";
+		status = "disabled";
+	};
+	led@1 {
+		compatible = "mediatek,green";
+		status = "disabled";
+	};
+	led@2 {
+		compatible = "mediatek,blue";
+		status = "disabled";
+	};
+	led@3 {
+		compatible = "mediatek,jogball-backlight";
+		status = "disabled";
+	};
+	led@4 {
+		compatible = "mediatek,keyboard-backlight";
+		status = "disabled";
+	};
+	led@5 {
+		compatible = "mediatek,button-backlight";
+		status = "disabled";
+	};
+	led@6 {
+		compatible = "mediatek,lcd-backlight";
+		led_mode = <5>;
+		data = <1>;
+		pwm_config = <0 0 0 0 0>;
+		status = "okay";
+	};
+};

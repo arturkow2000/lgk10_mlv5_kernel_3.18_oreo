@@ -1,0 +1,80 @@
+/*
+ * LG Electronics CV5A fingerprint device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+&spi0 {
+	#include "../fpc1028.dtsi"
+};
+
+&pio {
+	fpc_spi_active: state_fpc_spi_active {
+		/* miso_spi */
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO95__FUNC_SPI0_MI>;
+		};
+
+		/* cs_spi */
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO96__FUNC_SPI0_CSB>;
+		};
+
+		/* mosi_spi */
+		pins_cmd2_dat {
+			pins = <PINMUX_GPIO97__FUNC_SPI0_MO>;
+		};
+
+		/* clk_spi */
+		pins_cmd3_dat {
+			pins = <PINMUX_GPIO98__FUNC_SPI0_CLK>;
+		};
+	};
+
+	fpc_reset_reset: state_fpc_reset_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO99__FUNC_GPIO99>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	fpc_reset_active: state_fpc_reset_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO99__FUNC_GPIO99>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	fpc_cs_low: state_fpc_cs_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	fpc_cs_high: state_fpc_cs_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	fpc_cs_active: state_fpc_cs_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_SPI0_CSB>;
+		};
+	};
+
+	fpc_irq_active: state_fpc_irq_active {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO23__FUNC_GPIO23>;
+			slew-rate = <0>;
+			bias-pull-down;
+		};
+	};
+};

@@ -1,0 +1,3 @@
+config TOVIS_INCELL_TD4100_HD_LV5
+        bool "Enable TOVIS TD4100 INCELL HD panel for LV5"
+        default n

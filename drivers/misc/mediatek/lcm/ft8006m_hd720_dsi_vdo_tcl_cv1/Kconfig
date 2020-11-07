@@ -1,0 +1,3 @@
+config TCL_INCELL_FT8006M_HD_CV1
+    bool "Enable TCL FT8006M INCELL HD panel for CV1"
+    default n

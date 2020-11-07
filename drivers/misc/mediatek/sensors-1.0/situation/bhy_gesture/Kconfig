@@ -1,0 +1,9 @@
+
+config MTK_BHY_GESTURE
+        bool "BHY gesture for MediaTek package"
+        default n
+        help
+        It support different gesture sensor.
+        If this option is set,
+	  	it will support
+        BHY gesture.

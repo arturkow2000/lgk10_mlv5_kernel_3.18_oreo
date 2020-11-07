@@ -1,0 +1,12 @@
+#
+# Makefile for Bosch sensors driver.
+#
+config MTK_BHY_ACC
+	bool "MTK_BHY_ACC for MediaTek package"
+	default n
+	help
+	  It support different accelerometer sensor.
+          If this option is set,
+	  it will support
+          MTK_BHY Accelerometer.
+

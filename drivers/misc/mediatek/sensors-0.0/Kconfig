@@ -1,0 +1,5 @@
+source "drivers/misc/mediatek/sensors-0.0/accelerometer/Kconfig"
+source "drivers/misc/mediatek/sensors-0.0/alsps/Kconfig"
+source "drivers/misc/mediatek/sensors-0.0/magnetometer/Kconfig"
+source "drivers/misc/mediatek/sensors-0.0/hwmon/Kconfig"
+source "drivers/misc/mediatek/sensors-0.0/sensor_cal/Kconfig"

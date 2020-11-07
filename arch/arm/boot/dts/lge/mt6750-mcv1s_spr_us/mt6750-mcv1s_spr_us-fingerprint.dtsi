@@ -1,0 +1,113 @@
+/*
+ * LG Electronics CV1S fingerprint device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&spi0 {
+//	#include "../fpc1028.dtsi"
+
+	fingerprint: fpc1020@20 {
+		status = "okay";
+		compatible = "fpc,fpc1020";
+		reg = <0x1100a000 0x1000>;
+		spi-bus-num = <0>;
+		spi-max-frequency = <8000000>;
+		debounce = <20 0>;
+		interrupt-parent = <&eintc>;
+		interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+		fpc,gpio_cs = <96>;
+		fpc,gpio_rst = <18>;
+		fpc,gpio_irq = <20>;
+		fpc,pinctrl;
+		fpc,enable-wakeup;
+		pinctrl-names =
+				"fpc1020_spi_active",
+				"fpc1020_reset_reset",
+				"fpc1020_reset_active",
+				"fpc1020_cs_low",
+				"fpc1020_cs_high",
+				"fpc1020_cs_active",
+				"fpc1020_irq_active";
+
+		pinctrl-0 = <&fpc_spi_active>;
+		pinctrl-1 = <&fpc_reset_reset>;
+		pinctrl-2 = <&fpc_reset_active>;
+		pinctrl-3 = <&fpc_cs_low>;
+		pinctrl-4 = <&fpc_cs_high>;
+		pinctrl-5 = <&fpc_cs_active>;
+		pinctrl-6 = <&fpc_irq_active>;
+	};
+};
+
+&pio {
+	fpc_spi_active: state_fpc_spi_active {
+		/* miso_spi */
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO95__FUNC_SPI0_MI>;
+		};
+
+		/* cs_spi */
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO96__FUNC_SPI0_CSB>;
+		};
+
+		/* mosi_spi */
+		pins_cmd2_dat {
+			pins = <PINMUX_GPIO97__FUNC_SPI0_MO>;
+		};
+
+		/* clk_spi */
+		pins_cmd3_dat {
+			pins = <PINMUX_GPIO98__FUNC_SPI0_CLK>;
+		};
+	};
+
+	fpc_reset_reset: state_fpc_reset_low {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	fpc_reset_active: state_fpc_reset_high {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO18__FUNC_GPIO18>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	fpc_cs_low: state_fpc_cs_pulllow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
+			slew-rate = <1>;
+			output-low;
+		};
+	};
+
+	fpc_cs_high: state_fpc_cs_pullhigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+
+	fpc_cs_active: state_fpc_cs_spi {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO96__FUNC_SPI0_CSB>;
+		};
+	};
+
+	fpc_irq_active: state_fpc_irq_active {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO20__FUNC_GPIO20>;
+			slew-rate = <0>;
+			bias-pull-down;
+		};
+	};
+};

@@ -1,0 +1,384 @@
+/*
+ * LG Electronics CV5A power device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/* battery profile */
+#include "../battery_LGE_3000mAh_BL-T31.dtsi"
+
+&i2c1 {
+	swithing_charger@6b {
+		status = "disabled";
+	 };
+
+	bq25898s@6B {
+		status = "okay";
+		compatible = "ti,bq25898s";
+		reg = <0x6B>;
+		lge,parallel-charger;
+		ti,bq2589x,charge-voltage = <4400>;
+		ti,bq2589x,charge-current = <1300>;
+		ti,bq2589x,term-current = <128>;
+		ti,bq2589x,input-current-limit = <1300>;
+		ti,bq2589x,input-voltage-limit = <4600>;
+	};
+};
+
+&i2c3 {
+	sm5424@49 {
+		status = "okay";
+		compatible = "sm,sm5424";
+		reg = <0x49>;
+
+		batreg = <4400>;
+		vbuslimit = <1800>;
+		fastchg = <500>;
+		dis_set = <8>;
+
+		regulator-name = "sm5424_otg_supply";
+	};
+};
+
+
+&bat_comm {
+	/* cust_charging.h */
+	/* stop charging while in talking mode */
+	stop_charging_in_takling = <1 >;
+	talking_recharge_voltage = <3800 >;
+	talking_sync_time = <60 >;
+
+	/* Battery Temperature Protection */
+	mtk_temperature_recharge_support = <1 >;
+	max_charge_temperature = <50 >;
+	max_charge_temperature_minus_x_degree = <47 >;
+	min_charge_temperature = <0 >;
+	min_charge_temperature_plus_x_degree = <6 >;
+	err_charge_temperature = <0xff >;
+
+	/* Linear Charging Threshold */
+	v_pre2cc_thres = <3400 >;	/* unit: mV */
+	v_cc2topoff_thres = <4050 >;
+	recharging_voltage = <4110 >;
+	charging_full_current = <100 >;	/* unit: mA */
+
+	/* Charging Current Setting */
+	config_usb_if = <0 >;
+	usb_charger_current_suspend = <0 >;	/* Unit: 0.01 mA */
+	usb_charger_current_unconfigured = <7000 >;	/* Unit: 0.01 mA */
+	usb_charger_current_configured = <50000 >;	/* Unit: 0.01 mA */
+	usb_charger_current = <50000 >;	/* Unit: 0.01 mA */
+	ac_charger_current = <205000 >;	/* Unit: 0.01 mA */
+	ac_charger_input_current = <150000 >;	/* Unit: 0.01 mA */
+	non_std_ac_charger_current = <50000 >;	/* Unit: 0.01 mA */
+	charging_host_charger_current = <65000 >;	/* Unit: 0.01 mA */
+	apple_0_5a_charger_current = <50000 >;	/* Unit: 0.01 mA */
+	apple_1_0a_charger_current = <65000 >;	/* Unit: 0.01 mA */
+	apple_2_1a_charger_current = <80000 >;	/* Unit: 0.01 mA */
+
+	/* charger error check */
+	bat_low_temp_protect_enable = <0 >;
+	v_charger_enable = <0 >;	/* 1:on , 0:off */
+	v_charger_max = <6500 >;	/* unit: mV */
+	v_charger_min = <4400 >;
+
+	/*  Tracking TIME */
+	onehundred_percent_tracking_time = <10 >;	/* Unit: second */
+	npercent_tracking_time = <20 >;	/* Unit: second */
+	sync_to_real_tracking_time = <60 >;	/* Unit: second */
+	v_0percent_tracking = <3450 >;	/* Unit: mV */
+
+	/* High battery support */
+	high_battery_voltage_support = <1 >;
+
+	mtk_pump_express_plus_support = <0 >;
+	ta_start_battery_soc = <1 >;
+	ta_stop_battery_soc = <85 >;
+	ta_ac_charging_current = <320000 >;
+
+	ta_ac_12v_input_current = <320000 >;
+	ta_ac_9v_input_current = <320000 >;
+	ta_ac_7v_input_current = <320000 >;
+
+	ta_9v_support = <1 >;
+	ta_12v_support = <1 >;
+
+	typec_high_input_current = <150000>;
+	typec_high_charging_current = <150000>;
+	typec_medium_input_current = <150000>;
+	typec_medium_charging_current = <150000>;
+};
+
+&bat_meter {
+	/* cust_battery_meter.h */
+	hw_fg_force_use_sw_ocv = <0 >;
+	/* ADC resistor  */
+	r_bat_sense = <4 >;
+	r_i_sense = <4 >;
+	r_charger_1 = <330 >;
+	r_charger_2 = <39 >;
+	temperature_t0 = <110 >;
+	temperature_t1 = <0 >;
+	temperature_t2 = <25 >;
+	temperature_t3 = <50 >;
+	temperature_t = <255 >;	/* this should be fixed, never change the value */
+	fg_meter_resistance = <0 >;
+
+	/* Qmax for 0mA */
+	q_max_pos_50 = <2743 >;
+	q_max_pos_25 = <2709 >;
+	q_max_pos_0 = <1168 >;
+	q_max_neg_10 = <762 >;
+	/* Qmax for 400mA, said high current */
+	q_max_pos_50_h_current = <2688 >;
+	q_max_pos_25_h_current = <2655 >;
+	q_max_pos_0_h_current = <1145 >;
+	q_max_neg_10_h_current = <747 >;
+	/* Discharge percentage, 1: D5, 0: D2 */
+	oam_d5 = <1 >;
+
+	change_tracking_point = <1 >;
+	/* SW OCV tracking setting */
+	cust_tracking_point = <0 >;
+	cust_r_sense = <56 >;
+	cust_hw_cc = <0 >;
+	aging_tuning_value = <103 >;
+	cust_r_fg_offset = <0 >;
+	ocv_board_compesate = <0 >;
+	r_fg_board_base = <1000 >;
+	r_fg_board_slope = <1000 >;
+#ifdef CONFIG_MTK_PMIC_CHIP_MT6353
+	car_tune_value = <101 >;
+#else
+	car_tune_value = <118 >;
+#endif
+
+	/* HW Fuel gague  */
+	current_detect_r_fg = <10 >;	/* Unit: mA */
+	minerroroffset = <1000 >;
+	fg_vbat_average_size = <18 >;
+	r_fg_value = <10 >;	/* Unit: mOhm */
+
+	/* HW Fuel gague 2.0*/
+	difference_hwocv_rtc = <30 >;
+	difference_hwocv_swocv = <10>;
+	difference_swocv_rtc = <10>;
+
+	difference_hwocv_vbat = <30>;
+	difference_vbat_rtc = <30>;
+	difference_swocv_rtc_pos = <15>;
+
+	max_swocv = <3>;
+
+	difference_voltage_update = <20>;
+	aging1_load_soc = <70>;
+	aging1_update_soc = <30>;
+	batterypseudo100 = <95>;
+#ifdef CONFIG_MTK_PMIC_CHIP_MT6353
+	batterypseudo1 = <2>;
+#else
+	batterypseudo1 = <6>;
+#endif
+
+	q_max_by_sys = <1>;			/*8. qmax variant by system drop voltage.*/
+	q_max_sys_voltage = <3350>;
+	shutdown_gauge0 = <1>;
+	shutdown_gauge1_xmins = <1>;
+	shutdown_gauge1_mins = <60>;
+
+	shutdown_system_voltage = <3400>;
+	charge_tracking_time = <60>;
+	discharge_tracking_time = <10>;
+
+	recharge_tolerance = <10>;
+
+	/* SW Fuel Gauge */
+	max_hwocv = <5 >;
+	max_vbat = <90 >;
+
+	/* HW Fuel gague 1.0*/
+	cust_poweron_delta_capacity_tolrance = <40 >;
+	cust_poweron_low_capacity_tolrance = <5 >;
+	cust_poweron_max_vbat_tolrance = <90 >;
+	cust_poweron_delta_vbat_tolrance = <30 >;
+	cust_poweron_delta_hw_sw_ocv_capacity_tolrance = <10 >;
+
+	/* Fixed battery temperature */
+	fixed_tbat_25 = <0 >;
+	/* Dynamic change wake up period of battery thread when suspend */
+	vbat_normal_wakeup = <3600 >;	/* Unit: mV */
+	vbat_low_power_wakeup = <3500 >;	/* Unit: mV */
+	normal_wakeup_period = <5400 >;	/* Unit: second */
+	low_power_wakeup_period = <300 >;	/* Unit: second */
+	close_poweroff_wakeup_period = <30 >;	/* Unit: second */
+
+	init_soc_by_sw_soc = <1 >;
+	sync_ui_soc_imm =<0>;
+	mtk_enable_aging_algorithm = <1>;
+	md_sleep_current_check = <1>;
+	q_max_by_current = <0>;
+
+	/* SOC track to SWOCV */
+	cust_tracking_gap = <15 >;	/* start tracking gap */
+	cust_trackingoffset = <0 >;	/* force offset to shift soc to 0 */
+	cust_trackingen = <0 >;	/* 0:disable, 1:enable */
+
+	/* keep min uisoc until voltage less than customization voltage of min uisoc */
+	cust_min_uisoc_percentage = <0 >;
+	cust_min_uisoc_voltage = <3400 >;
+
+#ifdef CONFIG_MTK_PMIC_CHIP_MT6353
+	rbat_pull_up_r = <16900 >;
+#else
+	rbat_pull_up_r = <24000 >;
+#endif
+	rbat_pull_up_volt = <1800 >;
+};
+
+&bat_comm {
+	/* cust_charging.h */
+	/* stop charging while in talking mode */
+	stop_charging_in_takling = <1 >;
+	talking_recharge_voltage = <3800 >;
+	talking_sync_time = <60 >;
+
+	/* Battery Temperature Protection */
+	mtk_temperature_recharge_support = <1 >;
+	max_charge_temperature = <50 >;
+	max_charge_temperature_minus_x_degree = <47 >;
+	min_charge_temperature = <0 >;
+	min_charge_temperature_plus_x_degree = <6 >;
+	err_charge_temperature = <0xff >;
+
+	/* Linear Charging Threshold */
+	v_pre2cc_thres = <3400 >;	/* unit: mV */
+	v_cc2topoff_thres = <4352 >;
+	recharging_voltage = <4280 >;
+	charging_full_current = <100 >;	/* unit: mA */
+
+	/* Charging Current Setting */
+	config_usb_if = <0 >;
+	usb_charger_current_suspend = <0 >;	/* Unit: 0.01 mA */
+	usb_charger_current_unconfigured = <7000 >;	/* Unit: 0.01 mA */
+	usb_charger_current_configured = <50000 >;	/* Unit: 0.01 mA */
+	usb_charger_current = <50000 >;	/* Unit: 0.01 mA */
+	ac_charger_current = <150000 >;	/* Unit: 0.01 mA */
+	ac_charger_input_current = <150000 >;	/* Unit: 0.01 mA */
+	non_std_ac_charger_current = <50000 >;	/* Unit: 0.01 mA */
+	charging_host_charger_current = <150000 >;	/* Unit: 0.01 mA */
+	apple_0_5a_charger_current = <50000 >;	/* Unit: 0.01 mA */
+	apple_1_0a_charger_current = <100000 >;	/* Unit: 0.01 mA */
+	apple_2_1a_charger_current = <210000 >;	/* Unit: 0.01 mA */
+
+	/* charger error check */
+	v_charger_enable = <0 >;	/* 1:on , 0:off */
+	v_charger_max = <10500 >;	/* unit: mV */
+	v_charger_min = <4400 >;
+
+	/*  Tracking TIME */
+	onehundred_percent_tracking_time = <10 >;	/* Unit: second */
+	npercent_tracking_time = <20 >;	/* Unit: second */
+	sync_to_real_tracking_time = <60 >;	/* Unit: second */
+	v_0percent_tracking = <3450 >;	/* Unit: mV */
+
+	/* High battery support */
+	high_battery_voltage_support = <1 >;
+
+	mtk_pump_express_plus_support = <1 >;
+	ta_start_battery_soc = <1 >;
+	ta_stop_battery_soc = <100 >;
+	ta_ac_charging_current = <200000 >;
+
+	ta_ac_12v_input_current = <180000 >;
+	ta_ac_9v_input_current = <180000 >;
+	ta_ac_7v_input_current = <180000 >;
+
+	ta_9v_support = <1 >;
+	ta_12v_support = <0 >;
+};
+
+/* fuel gauge */
+&bat_meter {
+	LGC = "fg,lgc-battery-data";
+	TOCAD = "fg,tocad-battery-data";
+
+	/* cust_battery_meter.h */
+	r_charger_1 = <330 >;
+	r_charger_2 = <39 >;
+
+	rbat_pull_up_r = <62000 >;
+
+	shutdown_system_voltage = <3400 >;
+	/* K6 don't use this option */
+	cust_min_uisoc_percentage = <2>;
+	car_tune_value = <104 >;
+	/* keep min uisoc until voltage less than customization voltage of min uisoc */
+	cust_min_uisoc_voltage = <3400 >;
+	/* fg 2.0 */
+	shutdown_gauge0 = <0 >;
+	shutdown_gauge1_xmins = <0 >;
+	difference_hwocv_rtc = <20 >;
+	difference_hwocv_swocv = <20 >;
+	difference_swocv_rtc = <30 >;
+	difference_vbat_rtc = <30 >;
+	difference_swocv_rtc_pos = <15 >;
+	max_swocv = <1>;
+	batterypseudo100 = <94 >;
+	batterypseudo1 = <1 >;
+	embedded_battery =<1 >;
+};
+
+&odm {
+	charger_controller: charger_controller {
+		status = "ok";
+		compatible = "lge,charger-controller";
+
+		lge,otp_v2;
+		lge,otp_fcc = <450>;
+		lge,otp_vfloat = <4000>;
+
+		lge,fb_fcc = <1000>;
+
+		lge,llk_soc_max = <50>;
+		lge,llk_soc_min = <45>;
+
+		lge,safety_time = <720>; /*min*/
+
+		lge,usb_current_max = <900>;
+	};
+
+	lge,battery-id {
+		compatible = "lge,battery-id";
+
+		model-name = "BL-T39";
+		charge-full-design = <3000>;
+
+		/* Auth ID - Vendor */
+		manufacturer =
+			"LGC", "LGC",
+			"TOCAD", "TOCAD";
+	};
+};
+
+&pio {
+	drvvbus_default: drvvbus_default {
+	};
+
+	gpio43_mode1_drvvbus_low: drvvbus_low {
+		pins_cmd_dat {
+			/delete-property/	pins;
+			/delete-property/	slew-rate;
+			/delete-property/	output-low;
+		};
+	};
+
+	gpio43_mode1_drvvbus_high: drvvbus_high {
+		pins_cmd_dat {
+			/delete-property/	pins;
+			/delete-property/	slew-rate;
+			/delete-property/	output-high;
+		};
+	};
+};

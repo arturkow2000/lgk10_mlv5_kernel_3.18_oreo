@@ -1,0 +1,52 @@
+/*
+ * LG Electronics LV5 touch device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c0 {
+	#include "../lg4894.dtsi"
+	#include "../td4100.dtsi"
+
+	cap_touch@5d {
+		status = "disabled";
+	};
+};
+
+&touch {
+	status = "disabled";
+};
+
+/* touch gpio start */
+&pio {
+	ts_pin_default: ts_default {
+	};
+	ts_pin_active: ts_active {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO10__FUNC_GPIO10>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+	ts_pin_suspend: ts_suspend {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO10__FUNC_GPIO10>;
+			slew-rate = <1>;
+			output-low;
+		};
+
+	};
+};
+/* touch gpio end */

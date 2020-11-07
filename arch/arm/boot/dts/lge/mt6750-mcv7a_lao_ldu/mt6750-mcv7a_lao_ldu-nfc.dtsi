@@ -1,0 +1,23 @@
+/*
+ * LG Electronics CV7 nfc device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c1 {
+	pn547@28 {
+		compatible = "nxp,pn547";
+		reg = <0x28>;
+		status = "okay";
+
+		interrupt-parent = <&eintc>;
+		interrupts = <75 IRQ_TYPE_EDGE_RISING>;//<PINMUX_GPIO75__FUNC_GPIO75 IRQ_TYPE_EDGE_RISING>;
+		debounce = <2 0>;
+
+		nxp,gpio_ven = <77>;//<PINMUX_GPIO77__FUNC_GPIO77>;
+		nxp,gpio_mode = <76>;//<PINMUX_GPIO76__FUNC_GPIO76>;
+		nxp,gpio_irq = <75>;//<PINMUX_GPIO75__FUNC_GPIO75>;
+	};
+};

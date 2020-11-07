@@ -1,0 +1,5 @@
+config SW49106_FHDPLUS_DSI_VDO_LGD_CV5
+	bool "Enable LGD SW49106 INCELL FHD+ panel for MCV5"
+	default n
+	help
+		LGD SW49106 INCELL FHD+ panel for MCV5

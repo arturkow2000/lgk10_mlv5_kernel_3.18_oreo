@@ -1,0 +1,5 @@
+config SW49107_TOVIS_FHDPLUS_DSI_CMD_CV7A
+	bool "Enable TOVIS SW49107 INCELL Command Mode FHD+ panel for CV7A"
+	default n
+	help
+		TOVIS SW49106 INCELL Command Mode FHD+ panel for CV7A

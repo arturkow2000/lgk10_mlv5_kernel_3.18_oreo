@@ -1,0 +1,6 @@
+
+config HQ_SET_LCD_BIAS
+	bool CONFIG_HQ_SET_LCD_BIAS
+	default n
+	help
+	  HQ LCD BIAS driver

@@ -1,0 +1,10 @@
+
+config MTK_ICM406XX_G
+        bool "ICM406XX for MediaTek package"
+        default n
+        help
+        It support different gyroscope sensor.
+        If this option is set,
+	  	it will support
+         ICM406XX gyroscope.
+

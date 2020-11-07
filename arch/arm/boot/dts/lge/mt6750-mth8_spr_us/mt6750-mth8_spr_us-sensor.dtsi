@@ -1,0 +1,112 @@
+/*
+ * LG Electronics TH8 sensor device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&odm {
+/*  start sensor */
+		cust_accel@0 {
+		compatible				= "mediatek,mc3410";
+		i2c_num				= <1>;
+		i2c_addr				= <0x4c 0 0 0>;
+		direction				= <4>;
+		power_id				= <0xffff>;
+		power_vol				= <0>;
+		firlen					= <0>;
+		is_batch_supported			= <0>;
+		};
+		cust_accel@1 {
+                compatible                              = "mediatek,bma253";
+                i2c_num                         = <1>;
+               /* i2c_addr                                = <0x18 0 0 0>;*/
+                direction                               = <6>;
+                power_id                                = <0xffff>;
+                power_vol                               = <0>;
+                firlen                                  = <0>;
+                is_batch_supported                      = <0>;
+                };
+		cust_mag@0 {
+		compatible				= "mediatek,akm09916";
+		i2c_num				= <1>;
+	/*	i2c_addr				= <0x0C 0 0 0>;*/
+		direction				= <3>;
+		power_id				= <0xffff>;
+		power_vol				= <0>;
+		is_batch_supported	= <0>;
+		};
+		cust_mag@1 {
+		compatible				= "mediatek,afx133";
+		i2c_num				= <1>;
+	/*	i2c_addr				= <0x0C 0 0 0>;*/
+		direction				= <3>;
+		power_id				= <0xffff>;
+		power_vol				= <0>;
+		is_batch_supported	= <0>;
+		};
+		board_gpios:board_gpios@0 {
+		compatible = "mediatek,pcb-gpio";
+		pcb-rf = <125 126 127 128>;
+		pcb-sim = <129>;
+		pcb-stage= <3 2 1>;
+		};
+/* end sensor */
+};
+
+&pio {
+
+	sarsensor_intpin_default_a: eint@11 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO11__FUNC_GPIO11>;
+			slew-rate = <0>;
+		};
+	};
+
+};
+&odm {
+sar_1: sar_sensor_1 {
+	pinctrl-names = "pin_default_A";
+	pinctrl-0 = <&sarsensor_intpin_default_a>;
+	interrupt-parent = <&eintc>;
+	interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+	debounce = <1 0>;
+	status = "okay";
+};
+};
+&pio {
+
+	sarsensor_intpin_default_b: eint@0 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO0__FUNC_GPIO0>;
+			slew-rate = <0>;
+		};
+	};
+
+};
+&odm {
+sar_2: sar_sensor_2 {
+	pinctrl-names = "pin_default_B";
+	pinctrl-0 = <&sarsensor_intpin_default_b>;
+	interrupt-parent = <&eintc>;
+	interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
+	debounce = <1 0>;
+	status = "okay";
+};
+};
+
+&i2c1 {
+	sarsensor_1@28 {
+		compatible = "mediatek,sarsensor_1";
+		reg = <0x28>;
+		status = "okay";
+	};
+};
+&i2c3 {
+	sarsensor_2@28 {
+		compatible = "mediatek,sarsensor_2";
+		reg = <0x28>;
+		status = "okay";
+	};
+};

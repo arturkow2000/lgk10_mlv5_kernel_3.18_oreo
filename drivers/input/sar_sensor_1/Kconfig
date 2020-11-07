@@ -1,0 +1,10 @@
+
+
+config INPUT_SX9310_1
+	tristate "SX9310_SAR_1_sensor"
+	depends on SAR_SENSOR_SX9310
+	default n
+	help
+	  Say Y to enable the SAR detection application, if N here not to use the
+	  this SAR sensor
+

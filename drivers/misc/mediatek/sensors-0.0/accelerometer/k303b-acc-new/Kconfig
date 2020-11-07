@@ -1,0 +1,8 @@
+config MTK_K303B_ACC_NEW
+	bool "K303B for LGE Devices"
+	default n
+	help
+	  It support different accelerometer sensor.
+          If this option is set,
+	  it will support
+          K303B Accelerometer.

@@ -1,0 +1,363 @@
+config MACH_LGE
+	bool
+
+menu "LGE Board Selection"
+
+config MACH_MT6750_LG_PROJECT
+	bool "MT6750 LG PROJECT"
+	depends on ARCH_MT6755
+	select MACH_LGE
+	help
+		Support for the MTK MT6750 LG device
+
+config MACH_MT6750_LGPS32
+	bool "MT6750 LGPS32"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_LV5
+	bool "MT6750 LV5"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_LV7
+	bool "MT6750 LV7"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_SF3
+	bool "MT6750 SF3"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_LS7
+	bool "MT6750VCC LS7"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_TH8
+	bool "MT6750VCC TH8"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_CV1S
+	bool "MT6750VCC CV1S"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750S_CV5A
+	bool "MT6750S CV5A"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750S_CV7A
+	bool "MT6750S CV7A"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+config MACH_MT6750_CV3
+	bool "MT6750 CV3"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+endmenu
+
+config MACH_MT6750_LV7V
+	bool "MT6750 LV7V"
+	depends on ARCH_MT6755
+	select MACH_MT6750_LG_PROJECT
+
+
+config T32_ON_MTK
+	bool "MediaTek T32 support"
+	depends on ARCH_MT6755
+	default n
+
+config LGE_EARJACK_DEBUGGER
+	bool "Earjack UART debugger support"
+	default n
+	depends on MACH_LGE
+	help
+		Support earjack type UART debugger cable
+
+config LGE_PM
+	depends on MACH_LGE
+	bool "LGE Power Feature"
+	default n
+	help
+		Say y here to support LGE Power Feature.
+		LGE_PM is related with LGE Specific.
+		Power manangment, Battery Charging, Fuel Gauge, Thermal and ETC.
+
+config LGE_PM_DEBUG
+	depends on MACH_LGE
+	bool "LGE Power Debug Feature"
+	default n
+	help
+		Say y here to support LGE Power Debug Log Feature.
+		LGE_PM_DEBUG is related with LGE Specific.
+		Clock,GPIO,PMIC_regs dump log.
+
+config LGE_BOOTLOADER_LOG
+	tristate "Support LGE bootloader log"
+	default n
+	depends on MACH_LGE
+	help
+		LGE bootloader log
+
+config LGE_RTC_TIMESTAMP
+	depends on MACH_LGE
+	bool "Support showing RTC timestamp in kernel message"
+	default n
+	help
+		Say y here to shows RTC timestamp in kernel message.
+
+config PRE_SELF_DIAGNOSIS
+	tristate "Support LGE self diagnosis for factory"
+	default n
+	depends on MACH_LGE
+	help
+
+config LGE_PM_PSEUDO_BATTERY
+	tristate "LGE_PM Support Fake Battery"
+	default n
+	help
+		This feature is used for faking battery presense to userspace
+
+config LGE_PM_USB_CURRENT_MAX
+	tristate "LGE_PM Support USB max current"
+	default n
+	help
+	  This feature is used for set charging current higher than USB charging current
+
+config LGE_PM_BATTERY_ID_CHECKER
+	tristate "Virtual Device for LGE Battery ID Checker"
+	depends on LGE_PM
+	default n
+	help
+		Say Y to enable LGE Battery ID Checker. Manufacturer have their own
+		systematic identification of cell types, and protect the system from
+		problems as using non-standard or unexpected types. so cross-
+		reference battery identification are useful to identify.
+
+config LGE_PM_BATTERY_ID_EMBEDDED_ADC
+    tristate "LGE_PM Support Embedded ADC Battery ID Check"
+	depends on LGE_PM_BATTERY_ID_CHECKER
+    default n
+	help
+	    This feature is used for embedded ADC Battery ID check
+
+config LGE_PM_CHARGING_SCENARIO
+	bool "LGE_PM Support OTP Charging Scenario"
+	default n
+	help
+	  Say y here to support LGE Power Management Charging Scenario Feature.
+	  CONFIG_LGE_PM_CHARGING_SCENARIO releated changed.
+	  Battery Charging with battery temperature.
+
+config LGE_PM_CHARGER_SCENARIO_SPRINT
+	depends on LGE_PM_CHARGING_SCENARIO
+	default n
+	bool "LGE_PM Support OTP Charging Scenario sprint"
+	help
+	  Say Y here to support for lge charging temperature scenario.
+	  This manages the charging status by battery temperature.
+
+config LGE_PM_CHARGER_SCENARIO_COMMON
+	depends on LGE_PM_CHARGING_SCENARIO
+	default n
+	bool "LGE_PM Support OTP Charging Scenario common"
+	help
+	  say Y here to support for lge charging temperature scenario common.
+	  This manages the charging status by battery temperature.
+
+config LGE_PM_VTS_COMPENSATE
+	depends on LGE_PM_VTS
+	default n
+	bool "LGE_PM Virtual Thermal Sensor Compensation"
+	help
+	  say Y Real battery therm return when High temperature over 54 deg.
+
+config LGE_PM_USB_ID
+        tristate "Support LGE PM USB ID feature"
+        default n
+        depends on MACH_LGE
+        help
+          LGE PM USB ID about cable detection, etc
+
+config LGE_PM_USB_ID_R_100K
+	tristate "Support LGE PM USB ID feature"
+	default n
+	depends on MACH_LGE
+	help
+	  LGE PM USB ID Pullup R is 100K about cable detection, etc
+
+config LGE_PM_AT_CMD_SUPPORT
+	bool "LGE_PM AT Command Support"
+	default	n
+	help
+	  Say y here to support LGE Power Management AT Commands.
+
+config LGE_PM_OTG_BOOST_MODE
+	bool "LGE_PM Boost mode for OTG"
+	default	n
+	help
+	  Say y here to support boost mode enable for OTG.
+
+config LGE_USB_DEBUGGER
+	bool "USB UART debugger support"
+	default n
+	depends on MACH_LGE
+	help
+		Support USB UART debugger cable
+
+config LGE_PM_BACKLIGHT_CHG_CONTROL
+	bool "LGE PM THERMALE BACKLIGHT CHG CONTROL setting"
+	default n
+	help
+	  LGE PM BACKLIGHT CHG Control
+
+config LGE_PM_MTK_C_MODE
+	bool "LGE PM THERMAL MTK C MODE Setting"
+	default n
+	depends on LGE_PM
+	help
+	  LGE PM C MODE THERMAL CONTROL
+
+config LGE_LEDS_BREATHMODE
+	bool "LED Pattern ID Node"
+	default n
+	depends on MACH_LGE
+	help
+
+config LGE_HALLIC
+	bool "Generic Hall IC Driver"
+	default n
+
+config SMART_COVER_DETECTION
+	bool "Generic Smart Cover Detection"
+	depends on LGE_HALLIC
+	default n
+
+config STYLUS_PEN_DETECTION
+	bool "Generic Pen Detection"
+	depends on LGE_HALLIC
+	default n
+
+config LGE_BOOT_MODE
+	bool "Support Get Booting mode from cmdline"
+	depends on MACH_LGE
+	default n
+	help
+		This is get bootimg mode from cmdline. And that mode is
+		offers to any module by using lge_get_boot_mode API.
+
+config LGE_MODIFY_MODEL
+	bool "Support to get Modify Model name from cmdline"
+	depends on MACH_LGE
+	default n
+	help
+		This is get Model name from cmdline.
+		And that is offers to change feature unlike Base model.
+
+config LGE_HANDLE_PANIC
+	bool "LG Kernel Crash Handler"
+	default n
+	help
+		Set LG Kernel Crash Handler
+
+config LGE_HANDLE_PANIC_MTK_EMI_MPU
+	bool "LG Kernel Crash Handler for MTK EMI MPU"
+	depends on LGE_HANDLE_PANIC && MTK_EMI_MPU
+	default n
+	help
+		This feature is for EMI MPU Violation.
+		If MTK EMI MPU Violation happens, force to crash.
+
+config LGE_HANDLE_PANIC_BY_KEY
+	bool "Generate panic by pressing keys"
+	default n
+	help
+		Set key panic
+
+config LGE_PM_CHARGERLOGO
+	tristate "LGE_PM Support Chargerlogo"
+	default n
+	help
+	This feature is used for lge chargerlogo
+
+config LGE_PM_CHARGERLOGO_WAIT_FOR_FG_INIT
+	tristate "Wait for FG init in LGE chargerlogo"
+	default n
+	help
+		It wait for FG init in LGE Chargerlogo.
+
+config LGE_QFPROM_INTERFACE
+	bool "Support LGE EFuse inferface"
+	default n
+	help
+		LGE EFuse interface
+
+config LGE_QFPROM_SECHASH
+	depends on LGE_QFPROM_INTERFACE
+	string "Support LGE EFuse partition hash"
+	default 0x0
+	help
+		LGE EFuse partition hash value
+
+config LGE_DM_VERITY_RECOVERY
+	tristate "Support dm verity corrupt recovery"
+	default y
+	depends on MACH_LGE
+	help
+		Sometimes, dm-bufio has invalid data. If data is corrupted,
+		try to recover data.
+
+config LGE_MTK_RTB
+	bool "Register tracing"
+	help
+	  Add support for logging different events to a small uncached
+	  region. This is designed to aid in debugging reset cases where the
+	  caches may not be flushed before the target resets.
+
+config LGE_MTK_RTB_SEPARATE_CPUS
+	bool "Separate entries for each cpu"
+	depends on LGE_MTK_RTB
+	depends on SMP
+	help
+	  Under some circumstances, it may be beneficial to give dedicated space
+	  for each cpu to log accesses. Selecting this option will log each cpu
+	  separately. This will guarantee that the last acesses for each cpu
+	  will be logged but there will be fewer entries per cpu
+
+config LGE_PANIC_ON_WDTK_RT_THROTTLING
+	bool "panic on wdtk rt throttling"
+	depends on MT_RT_THROTTLE_MON
+	default n
+	help
+	  Under some circumstances, RT Throttling could occur.
+	  So, linux system dequeued top of rt. However, if the wdtk thread becomes
+	  the target, the watchdog timeout occurs after dequeued.
+	  We need to make kernel panic before the thread dequeued to debug it.
+
+config LGE_LCD_OFF_DIMMING
+	tristate "Support LGE LCD off dimming reboot"
+	default n
+	depends on MACH_LGE
+	help
+	Support lcd off or dimming reboot when reboot reason is "LCD off"
+	lcd stay dimming until lcd is off and on again.
+
+config LGE_DRAM_WR_BIAS_OFFSET
+	bool "Support LGE DRAM WRITE BIAS OFFSET"
+	default n
+	depends on MACH_LGE
+	depends on LGE_HANDLE_PANIC
+	help
+	Support setting WR BIAS OFFSET to test passzone for "-" area.
+
+config DEBUG_USER_INIT
+	depends on DEBUG_USER
+	bool "Print debug messages for init process only"
+	default n
+	help
+	  Print the init process debug message only.

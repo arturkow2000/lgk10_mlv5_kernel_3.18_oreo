@@ -1,0 +1,19 @@
+config MTK_THERMAL_PA_VIA_ATCMD
+	bool "MTK_THERMAL_PA_VIA_ATCMD"
+	help
+	  Internal switch for thermal management to query modem RF
+	  temperature via AT command.
+
+config LGE_PM_VTS
+	bool "LG Electronic Virtual Thermal Sensor"
+	default n
+	depends on THERMAL
+	help
+	  Virtual Sensor representing real world temperature
+
+config FEATURE_MUTT_CA_CONTROL
+	bool "MUTT_CA_CONTROL_COOLER"
+	default n
+	depends on THERMAL
+	help
+	  Feature to control CA cooler

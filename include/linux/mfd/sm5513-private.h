@@ -1,0 +1,265 @@
+
+#ifndef __SM5513_PRIVATE_H__
+#define __SM5513_PRIVATE_H__
+
+#include <linux/i2c.h>
+#include <linux/mfd/sm5513.h>
+
+/* debug message level mapping */
+#define sm5513_dbg_msg      pr_debug
+#define sm5513_err_msg      pr_err
+
+/* Revision Information */
+#define SM5513_REVISION_3		3	/* VBUS IGNORE */
+
+/* Register Map */
+/* SM5513_REG_INT1 */
+#define SM5513_INT1_ATTACH		0x01
+#define SM5513_INT1_DETACH		0x02
+#define SM5513_INT1_VCONN_DISCHG	0x04
+#define SM5513_INT1_SRC_ADV_CHG		0x08
+#define SM5513_INT1_DEB_ORI_DETECT	0x10
+#define SM5513_INT1_CC_ABNORMAL		0x40
+#define SM5513_INT1_CC_ST_CHG		0x80
+
+/* SM5513_REG_INT2 */
+#define SM5513_INT2_CC1_OVP		0x01
+#define SM5513_INT2_CC2_OVP		0x02
+#define SM5513_INT2_VCONN_OCP		0x04
+#define SM5513_INT2_DPDM_OVP		0x08
+#define SM5513_INT2_BSTFAULT		0x10
+#define SM5513_INT2_BSTOVP		0x20
+#define SM5513_INT2_TSD			0x40
+
+/* SM5513_REG_INTMASK1 */
+#define SM5513_INTMSK1_ATTACH			0x01
+#define SM5513_INTMSK1_DETACH			0x02
+#define SM5513_INTMSK1_VCONN_DISCHG		0x04
+#define SM5513_INTMSK1_SRC_ADV_CHG		0x08
+#define SM5513_INTMSK1_DEB_ORI_DETECT		0x10
+#define SM5513_INTMSK1_CC_ABNORMAL		0x40
+#define SM5513_INTMSK1_CC_ST_CHG		0x80
+
+/* SM5513_REG_INTMASK2 */
+#define SM5513_INTMSK2_CC1_OVP			0x01
+#define SM5513_INTMSK2_CC2_OVP			0x02
+#define SM5513_INTMSK2_VCONN_OCP		0x04
+#define SM5513_INTMSK2_DPDM_OVP			0x08
+#define SM5513_INTMSK2_BSTFAULT			0x10
+#define SM5513_INTMSK2_BSTOVP			0x20
+#define SM5513_INTMSK2_TSD			0x40
+
+/* SM5513_REG_STATUS1 */
+#define SM5513_STATUS1_ATTACH			0x01
+#define SM5513_STATUS1_DETACH			0x02
+#define SM5513_STATUS1_VCONN_DISCHG		0x04
+#define SM5513_STATUS1_SRC_ADV_CHG		0x08
+#define SM5513_STATUS1_DEB_ORI_DETECT		0x10
+#define SM5513_STATUS1_CC_ABNORMAL		0x40
+#define SM5513_STATUS1_CC_ST_CHG		0x80
+
+/* SM5513_REG_STATUS2 */
+#define SM5513_STATUS2_CC1_OVP			0x01
+#define SM5513_STATUS2_CC2_OVP			0x02
+#define SM5513_STATUS2_VCONN_OCP		0x04
+#define SM5513_STATUS2_DPDM_OVP			0x08
+#define SM5513_STATUS2_BSTFAULT			0x10
+#define SM5513_STATUS2_BSTOVP			0x20
+#define SM5513_STATUS2_TSD			0x40
+
+/* SM5513_REG_CNTL */
+#define SM5513_CNTL_CC_OVP_EN			0x01
+#define SM5513_CNTL_SW_RESET			0x04
+#define SM5513_CNTL_DPDM_OVP_EN			0x08
+
+/* SM5513_REG_CC_STATUS */
+#define SM5513_CC_STATUS_ATTACH_TYPE		0x07
+#define SM5513_CC_STATUS_ADV_CURR		0x18
+#define SM5513_CC_STATUS_CABLE_FLIP		0x20
+#define SM5513_CC_STATUS_CABLE_TYPE		0x40
+
+/* SM5513_REG_CC_CNTL1 */
+#define SM5513_CC_CNTL1_OP_MODE			0x0F
+#define SM5513_CC_CNTL1_SRC_ADV			0x30
+#define SM5513_CC_CNTL1_USB20_ONLY		0x40
+#define SM5513_CC_CNTL1_nCC_DB_EN		0x80
+
+/* SM5513_REG_CC_CNTL2 */
+#define SM5513_CC_CNTL2_SNK_wACC_EN		0x01
+#define SM5513_CC_CNTL2_SNK_wPWR_EN		0x02
+#define SM5513_CC_CNTL2_SNK_DEB_EN		0x04
+#define SM5513_CC_CNTL2_SRC_AUD_EN		0x08
+#define SM5513_CC_CNTL2_SRC_DEB_EN		0x10
+#define SM5513_CC_CNTL2_SRC_DEB_OR_EN		0x20
+#define SM5513_CC_CNTL2_ALT_MODE_FAIL		0x40
+#define SM5513_CC_CNTL2_nCC_DB_EN		0x80
+
+/* SM5513_REG_CC_CNTL3 */
+#define SM5513_CC_CNTL3_DUTY_DRP		0x03
+#define SM5513_CC_CNTL3_DRP_PERIOD		0x30
+#define SM5513_CC_CNTL3_CC_DEBOUNCE		0xC0
+
+/* SM5513_REG_CC_CNTL4 */
+#define SM5513_CC_CNTL4_CC_STATE		0x0F
+
+/* SM5513_REG_CC_CNTL5 */
+#define SM5513_CC_CNTL5_VCONN_CC1_EN		0x01
+#define SM5513_CC_CNTL5_VCONN_CC2_EN		0x02
+#define SM5513_CC_CNTL5_VCONN_M_EN		0x04
+#define SM5513_CC_CNTL5_OCPVCONN		0x10
+#define SM5513_CC_CNTL5_CCOVP			0x20
+#define SM5513_CC_CNTL5_VCONN_OFF		0x80
+
+/* SM5513_REG_CC_CNTL6 */
+#define SM5513_CC_CNTL6_VC_DISCHG_CC2		0x01
+#define SM5513_CC_CNTL6_VC_DISCHG_CC1		0x02
+#define SM5513_CC_CNTL6_VC_DISCHG_M_EN		0x80
+
+/* SM5513_REG_SWCNTL */
+#define SM5513_SWCNTL_ENnOEPIN			0x01
+#define SM5513_SWCNTL_ENSELPIN			0x02
+#define SM5513_SWCNTL_ENnSINKPIN		0x04
+#define SM5513_SWCNTL_DPDM_CON_SW		0x78
+
+
+/* SM5513_REG_BOOSTCNTL */
+#define SM5513_BOOSTCNTL_ENBOOST		0x01
+#define SM5513_BOOSTCNTL_BOOSTOUT		0x0E
+#define SM5513_BOOSTCNTL_ENDISCHARGE		0x10
+
+/* SM5513_REG_DEVICE_ID */
+#define SM5513_DEVICE_VENDOR_ID			0x07
+#define SM5513_DEVICE_REVISION_ID		0xF0
+
+/* SM5513_PROBE3 */
+#define SM5513_PROBE3_ERROR_RECOVERY		0x00
+#define SM5513_PROBE3_DISABLE				0x01
+#define SM5513_PROBE3_UNATT_SNK				0x02
+#define SM5513_PROBE3_ATTWAIT_SNK			0x03
+#define SM5513_PROBE3_ATTED_SNK_DEF			0x04
+#define SM5513_PROBE3_ATTED_SNK_1P5			0x05
+#define SM5513_PROBE3_ATTED_SNK_3P0			0x06
+#define SM5513_PROBE3_TRY_SNK				0x07
+#define SM5513_PROBE3_TRYWAIT_SRC			0x08
+#define SM5513_PROBE3_UNATT_SRC				0x09
+#define SM5513_PROBE3_ATTWAIT_SRC			0x0A
+#define SM5513_PROBE3_ATTED_SRC				0x0B
+#define SM5513_PROBE3_TRY_SRC				0x0C
+#define SM5513_PROBE3_TRYWAIT_SNK			0x0D
+#define SM5513_PROBE3_UNATTWAIT_SRC			0x0E
+#define SM5513_PROBE3_UNATT_ACC				0x0F
+#define SM5513_PROBE3_ATTWAIT_ACC			0x10
+#define SM5513_PROBE3_POWERED_ACC			0x11
+#define SM5513_PROBE3_UNSUPPORT_ACC			0x12
+#define SM5513_PROBE3_AUDIO_ACC				0x13
+#define SM5513_PROBE3_DEBUG_SNK				0x14
+#define SM5513_PROBE3_UNORIDEB_SRC			0x15
+#define SM5513_PROBE3_ORIDEB_SRC			0x16
+
+enum sm5513_reg {
+    SM5513_REG_INT1         = 0x00,
+    SM5513_REG_INT2         = 0x01,
+    SM5513_REG_INTMASK1     = 0x02,
+    SM5513_REG_INTMASK2     = 0x03,
+    SM5513_REG_STATUS1      = 0x04,
+    SM5513_REG_STATUS2      = 0x05,
+    SM5513_REG_CNTL         = 0x06,
+    SM5513_REG_CC_STATUS    = 0x07,
+    SM5513_REG_CC_CNTL1     = 0x08,
+    SM5513_REG_CC_CNTL2     = 0x09,
+    SM5513_REG_CC_CNTL3     = 0x0A,
+    SM5513_REG_CC_CNTL4     = 0x0B,
+    SM5513_REG_CC_CNTL5     = 0x0C,
+    SM5513_REG_CC_CNTL6     = 0x0D,
+    SM5513_REG_SWCNTL       = 0x0E,
+    SM5513_REG_BOOSTCNTL    = 0x0F,
+    SM5513_REG_DEVICE_ID    = 0x10,
+	SM5513_REG_CC_SRC_CMP	= 0xD0,
+	SM5513_REG_CC_SNK_CMP	= 0xD1,
+	SM5513_REG_PROBE3		= 0xD3,
+	SM5513_REG_H_SPARE1		= 0xED,
+};
+
+enum sm5513_cable_types {
+    CABLE_TYPE_NON_POWERED      = 0x0,
+    CABLE_TYPE_POWERED,
+};
+
+enum sm5513_cable_flips {
+    CABLE_FLIP_NON_FLIP         = 0x0,
+    CABLE_FLIP_FLIPPED,
+};
+
+enum sm5513_adv_currs {
+    ADV_CURR_DEFAULT            = 0x0,
+    ADV_CURR_1_5V,
+    ADV_CURR_3V_1,
+    ADV_CURR_3V_2,
+};
+
+enum sm5513_attath_types {
+    ATTACH_TYPE_NONE            = 0x0,
+    ATTACH_TYPE_SOURCE          = 0x1,		/* Device Mode - UFP, SINK */
+    ATTACH_TYPE_SINK            = 0x2,		/* Host Mode - DFP, SOURCE */
+    ATTACH_TYPE_AUDIO           = 0x3,
+    ATTACH_TYPE_AUDIO_CHARGE    = 0x4,
+    ATTACH_TYPE_DEBUG           = 0x5,
+    ATTACH_TYPE_UNORI_DEBUG     = 0x6,
+    ATTACH_TYPE_ORI_DEBUG       = 0x7,
+};
+
+enum sm5513_cc_op_modes {
+    CC_OP_MODE_SRC_ONLY         = (0x1 << 3),
+    CC_OP_MODE_SNK_ONLY         = (0x1 << 2),
+    CC_OP_MODE_TRY_SRC          = (0x1 << 1),
+    CC_OP_MODE_TRY_SNK          = (0x1 << 0),
+    CC_OP_MODE_DEFAULT          = (0x0),
+};
+
+enum sm5513_cc_commands {
+    CC_CMD_DISABLE              = (0x1 << 3),
+    CC_CMD_ERR_REC              = (0x1 << 2),
+    CC_CMD_UNATT_SNK            = (0x1 << 1),
+    CC_CMD_UNATT_SRC            = (0x1 << 0),
+};
+
+enum sm5513_mux_switch {
+    DPDM_CON_OPEN				= 0x00,
+    DPDM_CON_HOST1				= 0x05,
+    DPDM_CON_HOST2				= 0x02, // DP_HOST2 only
+	DPDM_CON_RESERVE			= 0x0F,
+};
+
+enum sm5513_boost_voltage {
+	BOOST_OUT_4_5V				= 0x0,
+	BOOST_OUT_4_6V,
+	BOOST_OUT_4_7V,
+	BOOST_OUT_4_8V,
+	BOOST_OUT_4_9V,
+	BOOST_OUT_5_0V,
+	BOOST_OUT_5_1V,
+	BOOST_OUT_5_2V,
+};
+
+struct sm5513_dev {
+	struct device *dev;
+	struct i2c_client *i2c;
+	struct mutex i2c_lock;
+
+	u8 device_id;
+
+	struct sm5513_platform_data *pdata;
+};
+
+enum sm5513_types {
+	TYPE_SM5513,
+};
+
+/* SM5513 shared i2c API function */
+extern int sm5513_read_reg(struct i2c_client *i2c, u8 reg, u8 *dest);
+extern int sm5513_write_reg(struct i2c_client *i2c, u8 reg, u8 value);
+extern int sm5513_bulk_read(struct i2c_client *i2c, u8 reg, int count, u8 *buf);
+extern int sm5513_bulk_write(struct i2c_client *i2c, u8 reg, int count, u8 *buf);
+extern int sm5513_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask);
+
+#endif	/* __SM5513_PRIVATRE_H__ */

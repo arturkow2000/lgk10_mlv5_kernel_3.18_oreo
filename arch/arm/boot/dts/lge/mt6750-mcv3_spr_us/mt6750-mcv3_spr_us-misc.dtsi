@@ -1,0 +1,92 @@
+/*
+ * LG Electronics CV7 misc device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/**********************************************
+ *Keypad DTSI File
+ ********************************************/
+
+&keypad{
+	mediatek,kpd-key-debounce = <1024>;
+	mediatek,kpd-sw-pwrkey = <116>;
+	mediatek,kpd-hw-pwrkey = <8>;
+	mediatek,kpd-sw-rstkey  = <114>;
+	mediatek,kpd-hw-rstkey = <17>;
+	mediatek,kpd-use-extend-type = <0>;
+	/*HW Keycode [0~71] -> Linux Keycode*/
+	mediatek,kpd-hw-map-num = <72>;
+	mediatek,kpd-hw-init-map = <0 114 115 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+				0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+				0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 >;
+	mediatek,kpd-pwrkey-eint-gpio = <0>;
+	mediatek,kpd-pwkey-gpio-din  = <0>;
+	mediatek,kpd-hw-dl-key0 = <2>;
+	mediatek,kpd-hw-dl-key1 = <1>;
+	mediatek,kpd-hw-dl-key2 = <8>;
+	mediatek,kpd-hw-recovery-key = <2>;
+	mediatek,kpd-hw-factory-key = <17>;
+	status = "okay";
+};
+/* keypad end */
+
+&odm {
+	led0:led@0 {
+        compatible = "mediatek,red";
+        led_mode = <3>;
+        data = <1>;
+        pwm_config = <0 0 0 0 0>;
+    };
+
+	vibrator0:vibrator@0 {
+		compatible = "mediatek,vibrator";
+		vib_timer = <25>;
+		vib_limit = <9>;
+		vib_vol= <6>;
+	};
+};
+
+&pio {
+    hallic_default_cfg: hallic_default_cfg {
+    };
+
+    hallic_hall_int_cfg: gpio@2 {
+        // HALL_INT
+        pins_cmd_dat {
+            pins = <PINMUX_GPIO2__FUNC_GPIO2>;
+            slew-rate = <0>;        // input
+            //bias-pull-down = <00>;
+            bias-disable;
+        };
+    };
+
+	hallic_stylus_detect_cfg: gpio@7 {
+		// STYLUS_DETECT
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO7__FUNC_GPIO7>;
+			slew-rate = <0>; 		// input
+			//bias-disable;
+		};
+	};
+
+};
+
+&odm {
+	hallic_with_pen {
+		compatible = "lge,hallic";
+
+		interrupt-parent = <&eintc>;
+		interrupts = <2 IRQ_TYPE_EDGE_BOTH>, <7 IRQ_TYPE_EDGE_BOTH>;
+		debounce = <2 0>, <7 0>;    // gpio, debounce_time
+
+		pinctrl-names = "default", "hall_int_cfg", "stylus_detect_cfg";
+		pinctrl-0 = <&hallic_default_cfg>;
+		pinctrl-1 = <&hallic_hall_int_cfg>;
+		pinctrl-2 = <&hallic_stylus_detect_cfg>;
+
+		status = "okay";
+	};
+};

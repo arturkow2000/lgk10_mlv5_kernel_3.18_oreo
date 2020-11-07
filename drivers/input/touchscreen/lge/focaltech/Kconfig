@@ -1,0 +1,9 @@
+#
+# LGE touch core configuration
+#
+if INPUT_TOUCHSCREEN
+
+source "drivers/input/touchscreen/lge/focaltech/FT8006M/Kconfig"
+source "drivers/input/touchscreen/lge/focaltech/ft5526/Kconfig"
+
+endif

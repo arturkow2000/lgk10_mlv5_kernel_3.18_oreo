@@ -1,0 +1,9 @@
+
+config MTK_BHI160_GESTURE
+        bool "BHI160 gesture for MediaTek package"
+        default n
+        help
+        It support different gesture sensor.
+        If this option is set,
+	  	it will support
+        BHI160 gesture.

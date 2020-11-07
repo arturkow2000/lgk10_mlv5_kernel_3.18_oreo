@@ -1,0 +1,10 @@
+
+config MTK_BHI160_GYRO
+        bool "MTK_BHI160_GYRO for MediaTek package"
+        default n
+        help
+        It support different gyroscope sensor.
+        If this option is set,
+	  	it will support
+        MTK_BHI160 gyroscope.
+

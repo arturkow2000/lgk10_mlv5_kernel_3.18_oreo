@@ -1,0 +1,10 @@
+#
+# External-pack
+#
+
+config INPUT_EPACK
+	bool "External-pack device"
+	default n
+	---help---
+	  Say Y here if you are using a driver for an external-pack
+

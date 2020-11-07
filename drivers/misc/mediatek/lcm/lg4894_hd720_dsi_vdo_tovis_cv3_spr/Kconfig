@@ -1,0 +1,3 @@
+config TOVIS_INCELL_LG4894_HD_CV3_SPR
+    bool "Enable TOVIS LG4894 INCELL HD panel for CV3 Sprint"
+    default n

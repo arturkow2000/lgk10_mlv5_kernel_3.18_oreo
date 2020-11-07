@@ -1,0 +1,3 @@
+config LGE_LCM_KD_HX8394A_TH8
+        bool "Enable King Display HX8394-A WXGA panel for TH8"
+        default n

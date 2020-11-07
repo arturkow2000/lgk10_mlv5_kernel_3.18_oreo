@@ -1,0 +1,5 @@
+config SW49107_LGD_FHDPLUS_DSI_CMD_CV7A
+	bool "Enable LGD SW49107 INCELL Command Mode FHD+ panel for CV7A"
+	default n
+	help
+		LGD SW49106 INCELL Command Mode FHD+ panel for CV7A

@@ -1,0 +1,11 @@
+config LGE_SENSOR_UNIFIED_NODE
+  bool CONFIG_LGE_SENSOR_UNIFIED_NODE
+  default n
+  help
+    CONFIG_LGE_SENSOR_UNIFIED_NODE
+
+config MTK_HWMON
+	bool "MTK HWMON Config"
+	default n
+	help
+	  CONFIG_MTK_HWMON for sensor common util

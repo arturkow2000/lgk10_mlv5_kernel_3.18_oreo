@@ -1,0 +1,105 @@
+/*
+ * LG Electronics CV7 common device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/* UART GPIO */
+&apuart0 {
+	pinctrl-names = "uart0_gpio_default",
+			"uart0_rx_set",
+			"uart0_rx_clear",
+			"uart0_tx_set",
+			"uart0_tx_clear";
+	pinctrl-0 = <&uart0_gpio_def_cfg>;
+	pinctrl-1 = <&uart0_rx_set_cfg>;
+	pinctrl-2 = <&uart0_rx_clr_cfg>;
+	pinctrl-3 = <&uart0_tx_set_cfg>;
+	pinctrl-4 = <&uart0_tx_clr_cfg>;
+	status = "okay";
+};
+
+&pio {
+	/* UART GPIO Settings - Start */
+	/* UART0: rx set, rx clear, tx clear, tx clear*/
+	uart0_gpio_def_cfg:uart0gpiodefault {
+
+	};
+	uart0_rx_set_cfg:uart0_rx_set@gpio105 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO105__FUNC_URXD0>;
+		};
+	};
+	uart0_rx_clr_cfg:uart0_rx_clear@gpio105  {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO105__FUNC_GPIO105>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+	uart0_tx_set_cfg:uart0_tx_set@gpio106  {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO106__FUNC_UTXD0>;
+		};
+	};
+	uart0_tx_clr_cfg:uart0_tx_clear@gpio106  {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO106__FUNC_GPIO106>;
+			slew-rate = <1>;
+			output-high;
+		};
+	};
+};/* UART GPIO end */
+
+&odm {
+	mtk,mtk-rtb {
+		compatible = "mtk,mtk-rtb";
+		mtk,rtb-size = <0x100000>;
+	};
+};
+
+/* LGE_UICC_S, change detect level{ */
+&eintc {
+	MD1_SIM1_HOT_PLUG_EINT@0 {
+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;  /* HIGH is 4, LOW is 8  */
+	};
+};
+/* LGE_UICC_E } */
+
+&mmc1 {
+	cd_level = /bits/ 8 <MSDC_CD_LOW>;
+};
+
+&reserved_memory {
+	smembackup-reserved-memory@46400000 {
+		compatible = "lge,smembackup";
+		reg = <0 0x46400000 0 0x20000>;
+	};
+
+	atfbackup-reserved-memory@46420000 {
+		compatible = "lge,atfbackup";
+		reg = <0 0x46420000 0 0x40000>;
+	};
+
+	atflogbackup-reserved-memory@46460000 {
+		compatible = "lge,atflogbackup";
+		reg = <0 0x46460000 0 0x30000>;
+	};
+
+	busdbgbackup-reserved-memory@46490000 {
+		compatible = "lge,busdbgbackup";
+		reg = <0 0x46490000 0 0x1000>;
+	};
+};
+
+&gpio_usage_mapping {
+	/delete-property/ GPIO_SIM1_HOT_PLUG;
+	/delete-property/ GPIO_SIM2_HOT_PLUG;
+	GPIO_FDD_BAND_SUPPORT_DETECT_1ST_PIN = <22>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_2ND_PIN = <90>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_3RD_PIN = <47>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_4TH_PIN = <48>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_5TH_PIN = <101>;
+};

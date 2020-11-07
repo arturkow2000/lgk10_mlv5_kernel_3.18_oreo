@@ -1,0 +1,91 @@
+/*
+ * LG Electronics CV5A sensor device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&odm {
+/*  start sensor */
+	/delete-node/ als;
+	/delete-node/ gse_1;
+	/delete-node/ gyro;
+	/delete-node/ mse;
+
+	/delete-node/ cust_accel@0;
+	/delete-node/ cust_alsps@0;
+	/delete-node/ cust_mag@0;
+	/delete-node/ cust_gyro@0;
+	/delete-node/ cust_baro@0;
+
+	als {
+		compatible = "mediatek, als-eint";
+		interrupt-parent = <&eintc>;
+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
+		debounce = <6 0>;
+		status = "okay";
+	};
+
+	gse_1 {
+		compatible = "mediatek, gse_1-eint";
+		interrupt-parent = <&eintc>;
+		interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+		debounce = <4 0>;
+		status = "okay";
+	};
+
+//	gyro {
+//		compatible = "mediatek, gyro-eint";
+//		interrupt-parent = <&eintc>;
+//		interrupts = <5 IRQ_TYPE_EDGE_RISING>;
+//		debounce = <5 0>;
+//		status = "okay";
+//	};
+
+//	mse {
+//		compatible = "mediatek, mse-eint";
+//		interrupt-parent = <&eintc>;
+//		interrupts = <115 IRQ_TYPE_EDGE_RISING>;
+//		debounce = <115 0>;
+//		status = "okay";
+//	};
+
+	soc {
+		/delete-node/ als_ps@0;
+		/delete-node/ barometer@0;
+		/delete-node/ gsensor@0;
+		/delete-node/ gyroscope@0;
+		/delete-node/ msensor@0;
+
+		/delete-node/ sar_sensor_1@0;
+		/delete-node/ sar_sensor_2@1;
+	};
+
+	// sysfs node for unified usercal
+	sensors-sysfs {
+		compatible = "lge,sensors-sysfs";
+		sysfs,node =
+			// group, user_node, kernel node
+			"accelerometer", "run_calibration",  "/sys/bus/platform/drivers/gsensor/run_fast_calibration",
+			"accelerometer", "selftest",         "/sys/bus/platform/drivers/gsensor/selftest",
+			"gyroscope",     "run_calibration",  "/sys/bus/platform/drivers/gyroscope/run_fast_calibration",
+			"gyroscope",     "selftest",         "/sys/bus/platform/drivers/gyroscope/selftest",
+			"proximity",     "run_calibration",  "/sys/bus/platform/drivers/als_ps/cali",
+			"proximity",     "calibration_data", "/sys/bus/platform/drivers/als_ps/ps_crosstalk"
+			;
+	};
+/* end sensor */
+};
+
+&i2c1 {
+	/delete-node/ alsps@60;
+	/delete-node/ gsensor@68;
+	/delete-node/ gyro@68;
+	/delete-node/ msensor@0f;
+
+	#include "../ap3426.dtsi"
+	#include "../akm09918.dtsi"
+	//#include "../bhi160.dtsi"
+	//#include "../spl06.dtsi"
+};

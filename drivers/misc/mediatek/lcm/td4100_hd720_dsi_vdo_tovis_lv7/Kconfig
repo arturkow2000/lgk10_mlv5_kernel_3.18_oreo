@@ -1,0 +1,5 @@
+config TOVIS_INCELL_TD4100_HD_LV7_SPR
+	bool "Enable TOVIS TD4100 INCELL HD panel for LV7_SPR"
+	default n
+	help
+		TOVIS TD4100 INCELL HD panel for LV7_SPR
