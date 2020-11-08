@@ -49,7 +49,11 @@ head-y		:= arch/arm64/kernel/head.o
 ifeq ($(CONFIG_ARM64_RANDOMIZE_TEXT_OFFSET), y)
 TEXT_OFFSET := $(shell awk 'BEGIN {srand(); printf "0x%03x000\n", int(512 * rand())}')
 else
+ifeq ($(CONFIG_ARCH_MT6755), y)
+TEXT_OFFSET := 0x00100000
+else
 TEXT_OFFSET := 0x00080000
+endif
 endif
 export	TEXT_OFFSET GZFLAGS
 
