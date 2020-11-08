@@ -36,6 +36,13 @@
 
 #define COMMON_CAM_CAL_DRV
 
+#define PFX "ZC533_eeprom"
+/*pr_err("[%s] " fmt, __FUNCTION__, ##arg)*/
+
+#define CAM_CALINF(format, args...)    pr_info(PFX "[%s] " format, __func__, ##args)
+#define CAM_CALDB(format, args...)     pr_info(PFX "[%s] " format, __func__, ##args)
+#define CAM_CALERR(format, args...)    printk(KERN_ERR format, ##args)
+
 //#define EEPROMGETDLT_DEBUG
 #define EEPROM_DEBUG
 #ifdef EEPROM_DEBUG
@@ -361,7 +368,7 @@ int iReadData_ZC533(unsigned int  ui4_offset, unsigned int  ui4_length, unsigned
    return 0;
 }
 
-#ifdef CONFIG_COMPAT
+#if defined(CONFIG_COMPAT) && !defined(COMMON_CAM_CAL_DRV)
 static int compat_put_cal_info_struct(
     COMPAT_stCAM_CAL_INFO_STRUCT __user *data32,
     stCAM_CAL_INFO_STRUCT __user *data)
@@ -815,7 +822,10 @@ static const struct file_operations g_stEEPROM_fops = {
     /* .ioctl = EEPROM_Ioctl */
 #if defined( COMMON_CAM_CAL_DRV)
 #else
-    .unlocked_ioctl = EEPROM_Ioctl
+    .unlocked_ioctl = EEPROM_Ioctl,
+#ifdef CONFIG_COMPAT
+    .compat_ioctl = CAM_CAL_Ioctl_Compat,
+#endif
 #endif
 };
 
