@@ -1861,6 +1861,10 @@ static long mtk_disp_mgr_compat_ioctl(struct file *file, unsigned int cmd,  unsi
 		{
 		    return _compat_ioctl_set_output_buffer(file, arg);
 		}
+	case COMPAT_DISP_IOCTL_QUERY_VALID_LAYER:
+		{
+			return _compat_ioctl_query_valid_layer(file, arg);
+		}
 	case COMPAT_DISP_IOCTL_SCREEN_FREEZE:
 		{
 			return _compat_ioctl_screen_freeze(file, arg);
