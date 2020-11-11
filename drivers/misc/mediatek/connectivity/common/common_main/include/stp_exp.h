@@ -35,7 +35,7 @@
 
 #ifdef MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
 
-#if (WMT_IDC_SUPPORT)
+#ifdef WMT_IDC_SUPPORT
 #define CFG_WMT_LTE_COEX_HANDLING 1
 #define CFG_WMT_LTE_ENABLE_MSGID_MAPPING 0
 #else
@@ -81,7 +81,7 @@
 *                             D A T A   T Y P E S
 ********************************************************************************
 */
-#ifdef MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
+//#ifdef MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
 
 typedef VOID (*MTK_WCN_STP_EVENT_CB) (VOID);
 typedef INT32 (*MTK_WCN_STP_IF_TX) (const PUINT8 data, const UINT32 size, PUINT32 written_size);
@@ -94,7 +94,7 @@ typedef enum {
 	STP_BTIF_IF_TX = 2,
 	STP_MAX_IF_TX
 } ENUM_STP_TX_IF_TYPE;
-#endif
+//#endif
 /*******************************************************************************
 *                            P U B L I C   D A T A
 ********************************************************************************
