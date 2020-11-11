@@ -33,7 +33,7 @@ struct compat_disp_session_config {
 	compat_uint_t present_fence_idx;
 	compat_uint_t dc_type;
 	compat_int_t need_merge;
-	compat_int_t tigger_mode;
+	compat_int_t trigger_mode;
 };
 
 struct compat_disp_input_config {
@@ -98,11 +98,18 @@ struct compat_disp_output_config {
 	compat_uint_t frm_sequence;
 };
 
+struct compat_disp_ccorr_config {
+	bool is_dirty;
+	compat_uint_t mode;
+	compat_uint_t color_matrix[16];
+};
+
 struct compat_disp_session_input_config {
 	compat_uint_t setter;
 	compat_uint_t session_id;
 	compat_uint_t config_layer_num;
-	struct compat_disp_input_config config[8];
+	struct compat_disp_input_config config[12];
+	struct compat_disp_ccorr_config ccorr_config;
 };
 
 struct compat_disp_present_fence {
@@ -161,12 +168,6 @@ struct compat_disp_session_output_config {
 	struct compat_disp_output_config config;
 };
 
-struct compat_disp_ccorr_config {
-	bool is_dirty;
-	compat_uint_t mode;
-	compat_uint_t color_matrix[16];
-};
-
 struct compat_disp_frame_cfg_t {
 	compat_uint_t setter;
 	compat_uint_t session_id;
@@ -189,7 +190,7 @@ struct compat_disp_frame_cfg_t {
 	compat_uint_t present_fence_idx;
 	compat_uint_t prev_present_fence_fd;
 	compat_uptr_t prev_present_fence_struct;
-	compat_uint_t tigger_mode;
+	compat_uint_t trigger_mode;
 	compat_uint_t user;
 
 	struct compat_disp_ccorr_config ccorr_config;
@@ -221,16 +222,6 @@ struct compat_disp_session_info {
 	/* notes: for better Accuracy, updateFPS = real_fps*100 */
 	compat_uint_t updateFPS;
 	compat_uint_t is_updateFPS_stable;
-};
-
-struct compat_disp_layer_config {
-	compat_uint_t ovl_id;
-	compat_uint_t src_fmt;
-	compat_uint_t dst_offset_x, dst_offset_y;
-	compat_uint_t dst_width, dst_height;
-	compat_uint_t ext_sel_layer;
-	compat_uint_t src_width, src_height;
-	compat_uint_t layer_caps;
 };
 
 struct compat_disp_layer_info {

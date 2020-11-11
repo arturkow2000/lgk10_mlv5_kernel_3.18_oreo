@@ -343,7 +343,7 @@ static int __trigger_display(disp_session_config *config)
 		WARN(1, "%s: legacy API are not supported!\n", __func__);
 	} else if (DISP_SESSION_TYPE(session_id) == DISP_SESSION_EXTERNAL) {
 		mutex_lock(&disp_session_lock);
-		ret = external_display_trigger(config->tigger_mode, session_id);
+		ret = external_display_trigger(config->trigger_mode, session_id);
 		mutex_unlock(&disp_session_lock);
 	} else if (DISP_SESSION_TYPE(session_id) == DISP_SESSION_MEMORY) {
 		ovl2mem_trigger(1, NULL, 0);
@@ -1299,7 +1299,7 @@ static int __frame_config_trigger(struct disp_frame_cfg_t *frame_cfg)
 	config.session_id = frame_cfg->session_id;
 	config.need_merge = 0;
 	config.present_fence_idx = frame_cfg->present_fence_idx;
-	config.tigger_mode = frame_cfg->tigger_mode;
+	config.trigger_mode = frame_cfg->trigger_mode;
 
 	return __trigger_display(&config);
 }
