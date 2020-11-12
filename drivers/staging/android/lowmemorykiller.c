@@ -1060,7 +1060,7 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 
 #if defined(CONFIG_64BIT) && defined(CONFIG_SWAP)
 	/* Halve other_free if there is less free swap */
-	if (vm_swap_full()) {
+	if (atomic_long_read(&nr_swap_pages) * 2 < total_swap_pages) {
 		lowmem_print(4, "Halve other_free %d\n", other_free);
 		other_free >>= 1;
 	}
