@@ -737,7 +737,7 @@ static ssize_t store_trace_value(struct device_driver *ddri, const char *buf, si
 	}
 	else
 	{
-		SENSOR_ERR("invalid content: '%s', length = %d\n", buf, count);
+		SENSOR_ERR("invalid content: '%s', length = %lu\n", buf, (long unsigned int)count);
 	}
 
 	return count;
@@ -830,7 +830,7 @@ static ssize_t store_debug_value(struct device_driver *ddri, const char *buf, si
 	}
 	else
 	{
-		SENSOR_ERR("invalid content: '%s', length = %d\n", buf, count);
+		SENSOR_ERR("invalid content: '%s', length = %lu\n", buf, (long unsigned int)count);
 	}
 
 	return count;

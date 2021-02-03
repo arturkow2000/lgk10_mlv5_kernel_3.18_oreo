@@ -31,8 +31,14 @@ endif #CONFIG_MTK_DTBO_FEATURE
 
 
 ifeq ($(strip $(CONFIG_MACH_LGE)), y)
+ifeq ($(strip $(CONFIG_ARM64)), y)
+boot := arch/arm64/boot
+DTS_BASE_NAME := $(subst $\",,$(CONFIG_BUILD_ARM64_DTB_OVERLAY_IMAGE_NAMES))
+else
 boot := arch/arm/boot
 DTS_BASE_NAME := $(subst $\",,$(CONFIG_BUILD_ARM_DTB_OVERLAY_IMAGE_NAMES))
+endif
+
 LGE_DTS_FILES := $(notdir $(wildcard $(srctree)/$(boot)/dts/lge/$(LGE_TARGET_PLATFORM)-$(DTS_BASE_NAME)/$(LGE_TARGET_PLATFORM)-$(DTS_BASE_NAME)*.dts))
 LGE_DTB_DIR := lge/$(LGE_TARGET_PLATFORM)-$(DTS_BASE_NAME)/
 LGE_DTB_FILES := $(patsubst %.dts,%.dtb,$(LGE_DTS_FILES))

@@ -472,7 +472,7 @@ int iBurstReadRegI2C(u8 *a_pSendData, u16 a_sizeSendData, u8 *a_pRecvData, u16 a
         ((g_pstI2Cclient->ext_flag) & I2C_MASK_FLAG) | (I2C_RS_FLAG) | I2C_WR_FLAG |
         I2C_DMA_FLAG;
     msgs[0].len = (a_sizeRecvData << 8 | a_sizeSendData);
-    msgs[0].buf = (u8 *) phyAddr;
+    msgs[0].buf = (u8 *)(uintptr_t) phyAddr;
     spin_unlock(&kdsensor_drv_lock);
 
     i4RetValue = i2c_transfer(g_pstI2Cclient->adapter, msgs, 1);

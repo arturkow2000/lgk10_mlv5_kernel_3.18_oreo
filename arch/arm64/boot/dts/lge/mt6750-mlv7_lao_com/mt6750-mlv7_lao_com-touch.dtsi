@@ -1,0 +1,86 @@
+/*
+ * LG Electronics LS7 touch device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c0 {
+
+	cap_touch@5d {
+		status = "disabled";
+	};
+
+		synaptics@20 {
+		compatible = "synaptics,TD4100";
+		reg = <0x20>;
+		status = "okay";
+		interrupt-parent = <&eintc>;
+		interrupts = <1 0x2002>;
+		debounce = <1 0>;
+		irqflags = <0x2002>;
+
+		/*reset-gpio = <&pio 10 0x00>;*/
+		irq-gpio = <&pio 1 0x2002>;
+
+		pinctrl-names = "default", "touch_pin_active", "touch_pin_sleep";	/* Touch GPIO pin name setting */
+		pinctrl-0 = <&ts_pin_default>;
+		pinctrl-1 = <&ts_pin_active>;		/* Touch GPIO pin active setting */
+		pinctrl-2 = <&ts_pin_suspend>;		/* Touch GPIO pin suspend setting */
+
+		/* Caps */
+		max_x = <720>;
+		max_y = <1280>;
+		max_pressure = <0xff>;
+		max_width = <15>;
+		max_orientation = <90>;
+		max_id = <10>;
+		hw_reset_delay = <150>;
+		sw_reset_delay = <150>;
+
+		/* Role */
+		use_lpwg = <1>;
+		use_lpwg_test = <1>;
+		hide_coordinate = <0>;
+
+		/* Firmware */
+		use_fw_upgrade = <1>;
+		use_firmware = <0>;
+		fw_image = "touch/lv7/synaptics/PLG635-V0.24_PR2612377_DS5.12.3.6.1005_20055118.img",
+				    "touch/lv7/synaptics/PLG635-V0.24_PR2612377_DS5.12.3.6.1005_20055118.bin";
+		panel_spec = "touch/ls7/synaptics/ls7_limit.txt";
+		panel_spec_mfts_folder = "touch/lv7/synaptics/lv7_limit.txt";
+
+		/* ASC */
+		use_asc = <0>;
+		low_delta_thres = <350>;
+		high_delta_thres = <600>;
+		max_delta_cnt = <2>;
+	};
+};
+
+&touch {
+	status = "disabled";
+};
+
+/* touch gpio start */
+&pio {
+	ts_pin_default: ts_default {
+	};
+	ts_pin_active: ts_active {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+	};
+	ts_pin_suspend: ts_suspend {
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
+			slew-rate = <0>;
+			bias-pull-up = <00>;
+		};
+	};
+};
+/* touch gpio end */

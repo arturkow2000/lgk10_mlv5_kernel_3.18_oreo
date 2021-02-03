@@ -1,0 +1,26 @@
+/*
+ * LG Electronics rpr0521 sensor device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+cust_alsps: cust_alsps@38 {
+	compatible = "mediatek,rpr0521";
+	reg = <0x38>;
+	status = "okay";
+	i2c_num = <1>;
+	i2c_addr= <0x38 0 0 0>;
+	power_id = <0xffff>;
+	power_vol = <0>;
+	polling_mode_ps = <0>;
+	polling_mode_als = <0>;
+	// als_level = data0_coefficient x 4 + data1_coefficient x 4 + judge_coefficient x 4
+	als_level = <4034 3523 2425 1166 1710 1384 790 250 1565 1850 2329 4657 0 0 0>;
+	als_value = <0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
+	ps_threshold_high = <0x32>;
+	ps_threshold_low = <0x14>;
+	is_batch_supported_ps = <0>;
+	is_batch_supported_als = <0>;
+};

@@ -1,0 +1,44 @@
+
+/dts-v1/;
+
+#include "../muse6750_hdk_o_lge.dtsi"
+
+#include "../mt6750-common.dtsi"
+#include "mt6750-mlv5_kt_kr-power.dtsi"
+#include "mt6750-mlv5_kt_kr-panel.dtsi"
+#include "mt6750-mlv5_kt_kr-touch.dtsi"
+#include "mt6750-mlv5_kt_kr-sensor.dtsi"
+#include "mt6750-mlv5_kt_kr-fingerprint.dtsi"
+#include "mt6750-mlv5_kt_kr-misc.dtsi"
+#include "mt6750-mlv5_kt_kr-sound.dtsi"
+#include "mt6750-mlv5_kt_kr-nfc.dtsi"
+#include "mt6750-mlv5_kt_kr-common.dtsi"
+#include "mt6750-mlv5_kt_kr-usb.dtsi"
+#include "mt6750-mlv5_kt_kr-camera.dtsi"
+#include "mt6750-mlv5_kt_kr-tdmb.dtsi"
+
+/ {
+	/*
+	typedef enum {
+		HW_REV_0 = 0,
+		HW_REV_0_1,
+		HW_REV_A,
+		HW_REV_B,
+		HW_REV_C,
+		HW_REV_D,
+		HW_REV_E,
+		HW_REV_1_0,
+		HW_REV_1_1,
+		HW_REV_MAX
+	} rev_type;
+	*/
+	lge,pcb_revision = <0x5>; // rev_d
+};
+
+&cust_accel {
+	direction = <2>;
+};
+
+&cust_mag {
+	direction = <2>;
+};

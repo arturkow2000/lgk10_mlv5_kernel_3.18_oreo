@@ -182,7 +182,7 @@ static ssize_t proc_generate_wdt_write(struct file *file,
 #ifdef CONFIG_ARM64
 		mt_secure_call(MTK_SIP_KERNEL_WDT, (u64) &wdt_atf_hang, 0, 0);
 #endif
-#ifdef CONFIG_ARM_PSCI
+#if defined(CONFIG_ARM_PSCI) && !defined(CONFIG_ARM64)
 		mt_secure_call(MTK_SIP_KERNEL_WDT, (u32) &wdt_atf_hang, 0, 0);
 #endif
 	} else {

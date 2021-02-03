@@ -19,7 +19,10 @@ subdir-ccflags-y += -Werror
 include $(srctree)/arch/arm64/boot/dts/Makefile
 
 targets := Image Image.gz
-
+ifeq ($(findstring lge,$(DTSSUBDIR)),lge)
+DTB_LIST := $(DTB_FILES)
+DTB_OBJS := $(addprefix $(obj)/dts$(DTSSUBDIR)/,$(DTB_LIST))
+else
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
 DTB_LIST := $(addsuffix .dtb,$(DTB_NAMES))
@@ -27,6 +30,7 @@ else
 DTB_LIST := $(dtb-y)
 endif
 DTB_OBJS := $(addprefix $(obj)/dts/,$(DTB_LIST))
+endif
 
 $(obj)/Image: vmlinux FORCE
 	$(call if_changed,objcopy)

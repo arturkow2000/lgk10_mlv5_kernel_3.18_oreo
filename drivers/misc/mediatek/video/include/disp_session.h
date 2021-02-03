@@ -193,7 +193,7 @@ typedef struct disp_session_config_t {
 	unsigned int present_fence_idx;
 	DISP_DC_TYPE dc_type;
 	int need_merge;
-	EXTD_TRIGGER_MODE tigger_mode;
+	EXTD_TRIGGER_MODE trigger_mode;
 } disp_session_config;
 
 typedef struct {
@@ -318,7 +318,7 @@ struct disp_frame_cfg_t {
 	unsigned int present_fence_idx;
 	unsigned int prev_present_fence_fd;
 	void *prev_present_fence_struct;
-	EXTD_TRIGGER_MODE tigger_mode;
+	EXTD_TRIGGER_MODE trigger_mode;
 	DISP_SESSION_USER user;
 
 	/* ccorr config */

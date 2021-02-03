@@ -1,0 +1,19 @@
+/*
+ * LG Electronics bmm150 sensor device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+cust_mag: cust_mag@13 {
+	compatible = "mediatek,bmm150";
+	reg = <0x13>;
+	status = "okay";
+	i2c_num = <1>;
+	i2c_addr = <0x13 0 0 0>;
+	direction = <5>;
+	power_id = <0xffff>;
+	power_vol = <0>;
+	is_batch_supported = <0>;
+};

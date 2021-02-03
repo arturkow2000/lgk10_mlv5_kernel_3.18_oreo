@@ -1,0 +1,9 @@
+/*
+ * LG Electronics LS7 touch device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+#include "../mt6750-mcv1s-touch_common/mt6750-mcv1s-touch.dtsi"

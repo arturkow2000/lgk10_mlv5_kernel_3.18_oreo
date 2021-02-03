@@ -188,7 +188,7 @@ static long EEPROM_Ioctl(
     void (*read_moduleID)(unsigned char * pinputdata) = NULL; // LGE_CHANGE: [2016-02-13] kyunghun.oh@lge.com, Add Module Vendor ID
 
     EEPROMDB("[COMMON_EEPROM]1 In to IOCTL %x %x\n",_IOC_DIR(a_u4Command),_IOC_WRITE);
-    EEPROMDB("[COMMON_EEPROM]2 In to IOCTL %x %x\n",CAM_CALIOC_G_READ,CAM_CALIOC_S_WRITE);
+    EEPROMDB("[COMMON_EEPROM]2 In to IOCTL %lx %lx\n",(long unsigned int)CAM_CALIOC_G_READ,(long unsigned int)CAM_CALIOC_S_WRITE);
 
 	
     if(_IOC_NONE == _IOC_DIR(a_u4Command))

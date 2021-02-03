@@ -25,11 +25,21 @@ ifneq ($(KERNELRELEASE),)
     subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci/
 
     # Do Nothing, move to standalone repo
-    MODULE_NAME := connadp
-    obj-y += $(MODULE_NAME).o
-    $(MODULE_NAME)-objs += common/connectivity_build_in_adapter.o
-    $(MODULE_NAME)-objs += common/wmt_build_in_adapter.o
+#    MODULE_NAME := connadp
+#    obj-y += $(MODULE_NAME).o
+#    $(MODULE_NAME)-objs += common/connectivity_build_in_adapter.o
+#    $(MODULE_NAME)-objs += common/wmt_build_in_adapter.o
 
+    subdir-ccflags-y += -D MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
+    # FIXME: required to build driver in-kernel, breaks module
+    subdir-ccflags-y += -DMTK_WCN_REMOVE_KERNEL_MODULE
+
+    obj-y += common/
+    obj-$(CONFIG_MTK_COMBO_WIFI) += wlan/
+    obj-$(CONFIG_MTK_COMBO_GPS) += gps/
+    obj-$(CONFIG_MTK_COMBO_ANT) += ant/
+    obj-$(CONFIG_MTK_COMBO_BT) += bt/
+    obj-$(CONFIG_MTK_FMRADIO) += fmradio/
 # Otherwise we were called directly from the command line;
 # invoke the kernel build system.
 else

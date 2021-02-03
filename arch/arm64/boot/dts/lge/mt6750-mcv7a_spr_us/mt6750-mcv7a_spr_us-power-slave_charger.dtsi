@@ -1,0 +1,26 @@
+/*
+ * LG Electronics CV7 power device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c3 {
+	bq25600@6b {
+		status = "okay";
+		compatible = "ti,bq25600";
+		reg = <0x6b>;
+
+		iterm = <180>;
+		vindpm = <4600>;
+		ovp = <10500>;
+		watchdog = <0>;
+		chg_timer = <10>;
+		vreg = <4400>;
+		vrechg = <100>;
+
+		chg_timer_disabled;
+		lge,parallel-charger;
+	};
+};

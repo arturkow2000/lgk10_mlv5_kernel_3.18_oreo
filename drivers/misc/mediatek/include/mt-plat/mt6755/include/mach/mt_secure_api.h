@@ -17,7 +17,7 @@
 
 #include <mt-plat/sync_write.h>
 
-#if defined(CONFIG_ARM_PSCI) || defined(CONFIG_MTK_PSCI)
+#if defined(CONFIG_ARM_PSCI) || defined(CONFIG_MTK_PSCI) || defined(CONFIG_ARM64)
 /* Error Code */
 #define SIP_SVC_E_SUCCESS               0
 #define SIP_SVC_E_NOT_SUPPORTED         -1
@@ -43,7 +43,9 @@
 
 #ifdef CONFIG_ARM64
 /* SIP SMC Call 64 */
-static noinline int mt_secure_call(u64 function_id,
+//static noinline int mt_secure_call(u64 function_id,
+// FIXME: converted into inline from noinline to prevent -Wunused-function
+static inline int mt_secure_call(u64 function_id,
 	u64 arg0, u64 arg1, u64 arg2)
 {
 	register u64 reg0 __asm__("x0") = function_id;

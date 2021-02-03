@@ -105,7 +105,7 @@ static UINT8 gLpbkBuf[WMT_LPBK_BUF_LEN] = { 0 };
 #ifdef CONFIG_MTK_COMBO_ANT
 static UINT8 gAntBuf[1024] = { 0 };
 #endif
-#if CFG_WMT_LTE_COEX_HANDLING
+#ifdef CFG_WMT_LTE_COEX_HANDLING
 static UINT32 g_open_wmt_lte_flag;
 #endif
 static UINT8 gFlashBuf[1024] = { 0 };
@@ -144,7 +144,7 @@ static INT32 wmt_core_hw_check(VOID);
 static INT32 opfunc_ant_ram_down(P_WMT_OP pWmtOp);
 static INT32 opfunc_ant_ram_stat_get(P_WMT_OP pWmtOp);
 #endif
-#if CFG_WMT_LTE_COEX_HANDLING
+#ifdef CFG_WMT_LTE_COEX_HANDLING
 static INT32 opfunc_idc_msg_handling(P_WMT_OP pWmtOp);
 #endif
 static INT32 opfunc_trigger_stp_assert(P_WMT_OP pWmtOp);
@@ -287,7 +287,7 @@ static const WMT_OPID_FUNC wmt_core_opfunc[] = {
 	[WMT_OPID_ANT_RAM_DOWN] = opfunc_ant_ram_down,
 	[WMT_OPID_ANT_RAM_STA_GET] = opfunc_ant_ram_stat_get,
 #endif
-#if CFG_WMT_LTE_COEX_HANDLING
+#ifdef CFG_WMT_LTE_COEX_HANDLING
 	[WMT_OPID_IDC_MSG_HANDLING] = opfunc_idc_msg_handling,
 #endif
 	[WMT_OPID_TRIGGER_STP_ASSERT] = opfunc_trigger_stp_assert,
@@ -2887,7 +2887,7 @@ INT32 opfunc_flash_patch_ver_get(P_WMT_OP pWmtOp)
 	return iRet;
 }
 
-#if CFG_WMT_LTE_COEX_HANDLING
+#ifdef CFG_WMT_LTE_COEX_HANDLING
 static INT32 opfunc_idc_msg_handling(P_WMT_OP pWmtOp)
 {
 	MTK_WCN_BOOL fgFail;

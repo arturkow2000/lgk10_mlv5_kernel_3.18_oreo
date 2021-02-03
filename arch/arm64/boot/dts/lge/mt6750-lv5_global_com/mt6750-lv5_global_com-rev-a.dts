@@ -1,0 +1,55 @@
+
+/dts-v1/;
+
+#include "../muse6750_hdk_o_lge.dtsi"
+
+#include "../mt6750-common.dtsi"
+#include "mt6750-lv5_global_com-power.dtsi"
+#include "mt6750-lv5_global_com-panel.dtsi"
+#include "mt6750-lv5_global_com-touch.dtsi"
+#include "mt6750-lv5_global_com-sensor.dtsi"
+#include "mt6750-lv5_global_com-fingerprint.dtsi"
+#include "mt6750-lv5_global_com-misc.dtsi"
+#include "mt6750-lv5_global_com-sound.dtsi"
+#include "mt6750-lv5_global_com-nfc.dtsi"
+#include "mt6750-lv5_global_com-common.dtsi"
+#include "mt6750-lv5_global_com-usb.dtsi"
+#include "mt6750-lv5_global_com-camera.dtsi"
+
+/ {
+	/*
+	typedef enum {
+		HW_REV_0 = 0,
+		HW_REV_0_1,
+		HW_REV_A,
+		HW_REV_B,
+		HW_REV_C,
+		HW_REV_D,
+		HW_REV_E,
+		HW_REV_1_0,
+		HW_REV_1_1,
+		HW_REV_MAX
+	} rev_type;
+	*/
+	lge,pcb_revision = <0x2>; // rev_a
+};
+
+&i2c1 {
+	rt9460@25 {
+		status = "okay";
+	};
+};
+
+&i2c3 {
+	rt9460@25 {
+		status = "disabled";
+	};
+};
+
+&cust_accel {
+	direction = <2>;
+};
+
+&cust_mag {
+	direction = <2>;
+};

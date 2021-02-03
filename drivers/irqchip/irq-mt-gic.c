@@ -1193,7 +1193,7 @@ char *mt_irq_dump_status_buf(int irq, char *buf, int len)
 		return ptr;
 	}
 
-#if defined(CONFIG_ARM_PSCI) || defined(CONFIG_MTK_PSCI)
+#if defined(CONFIG_ARM_PSCI) || defined(CONFIG_MTK_PSCI) || defined(CONFIG_ARM64)
 	rc = mt_secure_call(MTK_SIP_KERNEL_GIC_DUMP, irq, 0, 0);
 #else
 	rc = -1;

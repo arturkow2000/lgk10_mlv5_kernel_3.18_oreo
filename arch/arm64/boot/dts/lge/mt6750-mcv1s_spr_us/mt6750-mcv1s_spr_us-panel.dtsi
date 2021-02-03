@@ -1,0 +1,61 @@
+/*
+ * LG Electronics LS7 panel device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+&i2c3 {
+	i2c_lcd_bias@11 {
+		compatible = "mediatek,i2c_lcd_bias";
+		reg = <0x11>;
+		status = "okay";
+	};
+};
+
+&odm {
+	led@0 {
+		compatible = "mediatek,red";
+		status = "disabled";
+	};
+	led@1 {
+		compatible = "mediatek,green";
+		status = "disabled";
+	};
+	led@2 {
+		compatible = "mediatek,blue";
+		status = "disabled";
+	};
+	led@3 {
+		compatible = "mediatek,jogball-backlight";
+		status = "disabled";
+	};
+	led@4 {
+		compatible = "mediatek,keyboard-backlight";
+		status = "disabled";
+	};
+	led@5 {
+		compatible = "mediatek,button-backlight";
+		status = "disabled";
+	};
+
+	led@6 {
+		compatible = "mediatek,lcd-backlight";
+		led_mode = <5>;
+		data = <1>;
+		pwm_config = <0 13 0 0 0>;
+		status = "okay";
+	};
+};
+
+&pio {
+       disp_pwm_cfg: disp_pwm {
+                pins_cmd_dat {
+                        pins = <PINMUX_GPIO157__FUNC_DISP_PWM>;
+                        slew-rate = <0>;
+                        bias-disable;
+                };
+        };
+
+};

@@ -20,6 +20,10 @@
 #ifdef CONFIG_INPUT_EPACK
 #include <linux/input/epack.h>
 #endif
+
+#include <linux/sched.h>
+#include <linux/hrtimer.h>
+
 /* ============================================================ // */
 /* define */
 /* ============================================================ // */

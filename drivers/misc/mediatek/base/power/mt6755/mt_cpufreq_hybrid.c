@@ -21,6 +21,7 @@
 #include <linux/io.h>
 #include <linux/debugfs.h>
 #include <linux/delay.h>
+#include <linux/sched.h>
 #include <linux/wait.h>
 
 #include <mt-plat/sync_write.h>

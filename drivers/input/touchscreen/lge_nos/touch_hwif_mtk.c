@@ -136,14 +136,24 @@ int touch_bus_init(struct device *dev, int buf_size)
 	TOUCH_TRACE();
 
 	if (buf_size) {
+#ifndef CONFIG_ARM64
 		ts->tx_buf = (u8 *)dma_alloc_coherent(NULL,
 				buf_size, (dma_addr_t *)(long)&ts->tx_pa, GFP_KERNEL);
+#else
+		ts->tx_buf = (u8 *)dma_alloc_coherent(dev,
+				buf_size, (dma_addr_t *)(long)&ts->tx_pa, GFP_KERNEL);
+#endif
 
 		if (!ts->tx_buf)
 			TOUCH_E("fail to allocate tx_buf\n");
 
+#ifndef CONFIG_ARM64
 		ts->rx_buf = (u8 *)dma_alloc_coherent(NULL,
 				buf_size, (dma_addr_t *)(long)&ts->rx_pa, GFP_KERNEL);
+#else
+		ts->rx_buf = (u8 *)dma_alloc_coherent(dev,
+				buf_size, (dma_addr_t *)(long)&ts->rx_pa, GFP_KERNEL);
+#endif
 		if (!ts->rx_buf)
 			TOUCH_E("fail to allocate rx_buf\n");
 

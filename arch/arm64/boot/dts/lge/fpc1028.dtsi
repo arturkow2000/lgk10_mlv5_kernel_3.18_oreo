@@ -1,0 +1,31 @@
+fingerprint: fpc1020@23 {
+	status = "okay";
+	compatible = "fpc,fpc1020";
+	reg = <0x1100a000 0x1000>;
+	spi-bus-num = <0>;
+	spi-max-frequency = <8000000>;
+	debounce = <23 0>;
+	interrupt-parent = <&eintc>;
+	interrupts = <23 IRQ_TYPE_EDGE_RISING>;
+	fpc,gpio_cs = <96>;
+	fpc,gpio_rst = <99>;
+	fpc,gpio_irq = <23>;
+	fpc,pinctrl;
+	fpc,enable-wakeup;
+	pinctrl-names =
+			"fpc1020_spi_active",
+			"fpc1020_reset_reset",
+			"fpc1020_reset_active",
+			"fpc1020_cs_low",
+			"fpc1020_cs_high",
+			"fpc1020_cs_active",
+			"fpc1020_irq_active";
+
+	pinctrl-0 = <&fpc_spi_active>;
+	pinctrl-1 = <&fpc_reset_reset>;
+	pinctrl-2 = <&fpc_reset_active>;
+	pinctrl-3 = <&fpc_cs_low>;
+	pinctrl-4 = <&fpc_cs_high>;
+	pinctrl-5 = <&fpc_cs_active>;
+	pinctrl-6 = <&fpc_irq_active>;
+};

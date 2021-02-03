@@ -1,0 +1,21 @@
+/*
+ * LG Electronics bma255 sensor device tree source
+ *
+ * Copyright (c) 2017 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+// Slave Address 0x11 --> 0x10
+cust_accel: cust_accel@10 {
+	compatible = "mediatek,bma255";
+	reg = <0x10>;
+	status = "okay";
+	i2c_num = <1>;
+	i2c_addr = <0x10 0 0 0>;
+	direction = <7>;
+	power_id = <0xffff>;
+	power_vol = <0>;
+	firlen = <0>;
+	is_batch_supported = <0>;
+};

@@ -1,0 +1,50 @@
+fingerprint: goodix_fp@20 {
+	status = "okay";
+	compatible = "mediatek,goodix-fp";
+	debounce = <20 0>;
+	interrupt-parent = <&eintc>;
+	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+
+	cs_gpio = <96>;
+	reset_gpio = <18>;
+	irq_gpio = <20>;
+	netlink-event = <29>;
+
+	pinctrl-names =
+		"default",
+		"miso_spi",
+		"miso_pullhigh",
+		"miso_pulllow",
+		"reset_high",
+		"reset_low",
+		"mosi_spi",
+		"mosi_pullhigh",
+		"mosi_pulllow",
+		"cs_spi",
+		"cs_pullhigh",
+		"cs_pulllow",
+		"clk_spi",
+		"clk_pullhigh",
+		"clk_pulllow",
+		"ldo_high",
+		"ldo_low"
+		;
+
+	pinctrl-0 = <&gf_default>;
+	pinctrl-1 = <&gf_miso_spi>;
+	pinctrl-2 = <&gf_miso_pullhigh>;
+	pinctrl-3 = <&gf_miso_pulllow>;
+	pinctrl-4 = <&gf_reset_high>;
+	pinctrl-5 = <&gf_reset_low>;
+	pinctrl-6 = <&gf_mosi_spi>;
+	pinctrl-7 = <&gf_mosi_pullhigh>;
+	pinctrl-8 = <&gf_mosi_pulllow>;
+	pinctrl-9 = <&gf_cs_spi>;
+	pinctrl-10 = <&gf_cs_pullhigh>;
+	pinctrl-11 = <&gf_cs_pulllow>;
+	pinctrl-12 = <&gf_clk_spi>;
+	pinctrl-13 = <&gf_clk_pullhigh>;
+	pinctrl-14 = <&gf_clk_pulllow>;
+	pinctrl-15 = <&gf_ldo_high>;
+	pinctrl-16 = <&gf_ldo_low>;
+};

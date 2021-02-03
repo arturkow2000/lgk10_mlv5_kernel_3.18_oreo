@@ -1,0 +1,142 @@
+/*
+ * LG Electronics LV5 common device tree source
+ *
+ * Copyright (c) 2016 LG Electronics Co., Ltd.
+ *              http://www.lge.com
+ *
+ */
+
+/* UART GPIO */
+&apuart0 {
+	pinctrl-names = "uart0_gpio_default",
+			"uart0_rx_set",
+			"uart0_rx_clear",
+			"uart0_tx_set",
+			"uart0_tx_clear";
+	pinctrl-0 = <&uart0_gpio_def_cfg>;
+	pinctrl-1 = <&uart0_rx_set_cfg>;
+	pinctrl-2 = <&uart0_rx_clr_cfg>;
+	pinctrl-3 = <&uart0_tx_set_cfg>;
+	pinctrl-4 = <&uart0_tx_clr_cfg>;
+	status = "okay";
+};
+
+&pio {
+	/* UART GPIO Settings - Start */
+	/* UART0: rx set, rx clear, tx clear, tx clear*/
+	uart0_gpio_def_cfg:uart0gpiodefault {
+
+	};
+	uart0_rx_set_cfg:uart0_rx_set@gpio105 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO105__FUNC_URXD0>;
+		};
+	};
+	uart0_rx_clr_cfg:uart0_rx_clear@gpio105  {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO105__FUNC_GPIO105>;
+			slew-rate = <0>; //input
+			/delete-property/ output-high;
+		};
+	};
+	uart0_tx_set_cfg:uart0_tx_set@gpio106  {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO106__FUNC_UTXD0>;
+		};
+	};
+	uart0_tx_clr_cfg:uart0_tx_clear@gpio106  {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO106__FUNC_GPIO106>;
+			slew-rate = <0>;  // input
+			/delete-property/ output-high;
+		};
+	};
+};/* UART GPIO end */
+
+/ {
+	mtk,mtk-rtb {
+		compatible = "mtk,mtk-rtb";
+		mtk,rtb-size = <0x100000>;
+	};
+};
+/*LGE_UICC_S, disable simpindetect for non hotswap model {*/
+&gpio_usage_mapping {
+	/delete-property/ GPIO_SIM1_HOT_PLUG;
+	/delete-property/ GPIO_SIM2_HOT_PLUG;
+	GPIO_FDD_BAND_SUPPORT_DETECT_1ST_PIN = <47>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_2ND_PIN = <48>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_3RD_PIN = <51>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_4TH_PIN = <52>;
+	GPIO_FDD_BAND_SUPPORT_DETECT_5TH_PIN = <55>;
+};
+
+&eintc {
+	/delete-node/ MD1_SIM1_HOT_PLUG_EINT@0;
+	/delete-node/ MD1_SIM2_HOT_PLUG_EINT@1;
+};
+/*LGE_UICC_E, disable simpindetect for non hotswap model }*/
+
+&rf_clock_buffer_ctrl {
+	mediatek,clkbuf-quantity = <4>;
+	mediatek,clkbuf-config = <2 0 0 1>;
+	mediatek,clkbuf-driving-current = <2 2 2 2>;
+	status = "okay";
+};
+
+/ {
+	firmware {
+		android {
+			compatible = "android,firmware";
+			fstab {
+				compatible = "android,fstab";
+#ifndef CONFIG_MTK_AB_OTA_UPDATER
+				system {
+					compatible = "android,system";
+					dev = "/dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/system";
+					type = "ext4";
+					mnt_flags = "ro";
+					#ifndef CONFIG_MTK_DM_VERITY_OFF
+					fsmgr_flags = "wait,verify";
+					#else
+					fsmgr_flags = "wait";
+					#endif
+				};
+#endif
+#ifndef CONFIG_MTK_LATE_MOUNT
+				vendor {
+					compatible = "android,vendor";
+					dev = "/dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro";
+#ifndef CONFIG_MTK_AB_OTA_UPDATER
+					#ifndef CONFIG_MTK_DM_VERITY_OFF
+					fsmgr_flags = "wait,verify";
+					#else
+					fsmgr_flags = "wait";
+					#endif
+#else
+					#ifndef CONFIG_MTK_DM_VERITY_OFF
+					fsmgr_flags = "wait,slotselect,verify";
+					#else
+					fsmgr_flags = "wait,slotselect";
+					#endif
+#endif
+				};
+#endif
+#ifdef CONFIG_TARGET_COPY_OUT_ODM
+				odm {
+					compatible = "android,odm";
+					dev = "/dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/odm";
+					type = "ext4";
+					mnt_flags = "ro";
+#ifndef CONFIG_MTK_AB_OTA_UPDATER
+					fsmgr_flags = "wait";
+#else
+					fsmgr_flags = "wait,slotselect";
+#endif
+				};
+#endif
+			};
+		};
+	};
+};
