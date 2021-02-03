@@ -63,4 +63,10 @@ endif # if EXFAT_DEBUG
 config EXFAT_UEVENT
 	bool "enable uevent"
 
+config EXFAT_AS_TEXFAT
+	bool "Rename exfat to texfat"
+	default n
+	help
+	  For compatibility with stock Android which expects texfat driver.
+
 endif # if EXFAT_FS

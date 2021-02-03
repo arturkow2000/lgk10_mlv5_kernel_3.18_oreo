@@ -5,10 +5,16 @@
 ifneq ($(KERNELRELEASE),)
 # Called from inline kernel build
 # DKMS_DEFINE
+ifneq ($(CONFIG_EXFAT_AS_TEXFAT),)
+obj-$(CONFIG_EXFAT_FS) += texfat.o
+texfat-objs	:= super.o core.o core_exfat.o blkdev.o fatent.o cache.o \
+		   nls.o misc.o extent.o xattr.o
+else
 obj-$(CONFIG_EXFAT_FS) += exfat.o
-
 exfat-objs	:= super.o core.o core_exfat.o blkdev.o fatent.o cache.o \
 		   nls.o misc.o extent.o xattr.o
+endif
+
 else
 # Called from external kernel module build
 

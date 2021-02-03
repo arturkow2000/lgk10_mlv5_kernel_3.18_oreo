@@ -3803,7 +3803,11 @@ static void exfat_destroy_inodecache(void)
 
 static struct file_system_type exfat_fs_type = {
 	.owner       = THIS_MODULE,
+#ifdef CONFIG_EXFAT_AS_TEXFAT
+	.name        = "texfat",
+#else
 	.name        = "exfat",
+#endif
 	.mount       = exfat_fs_mount,
 	.kill_sb    = kill_block_super,
 	.fs_flags    = FS_REQUIRES_DEV,
@@ -3818,7 +3822,11 @@ static int __init init_exfat_fs(void)
 	if (err)
 		goto error;
 
+#ifdef CONFIG_EXFAT_AS_TEXFAT
+	exfat_kset = kset_create_and_add("texfat", NULL, fs_kobj);
+#else
 	exfat_kset = kset_create_and_add("exfat", NULL, fs_kobj);
+#endif
 	if (!exfat_kset) {
 		pr_err("exFAT: failed to create fs_kobj\n");
 		err = -ENOMEM;
@@ -3884,7 +3892,11 @@ module_init(init_exfat_fs);
 module_exit(exit_exfat_fs);
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 9, 0)
+#ifdef CONFIG_EXFAT_AS_TEXFAT
+MODULE_ALIAS_FS("texfat");
+#else
 MODULE_ALIAS_FS("exfat");
+#endif
 #endif
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("FAT/exFAT filesystem support");
