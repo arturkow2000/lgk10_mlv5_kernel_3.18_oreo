@@ -3705,7 +3705,14 @@ static long CAMERA_HW_Ioctl_Compat(struct file *filp, unsigned int cmd, unsigned
 		{
 			COMPAT_ACDK_SENSOR_FEATURECONTROL_STRUCT __user *data32;
 			ACDK_SENSOR_FEATURECONTROL_STRUCT __user *data;
+			unsigned long long __user *fov;
 			int err;
+			compat_uint_t i;
+			u32 FeatureId;
+			compat_uptr_t FeaturePara;
+			compat_uptr_t FeatureParaLen;
+
+			fov = NULL;
 
 			PK_DBG("[CAMERA SENSOR] CAOMPAT_KDIMGSENSORIOC_X_FEATURECONCTROL\n");
 
@@ -3718,10 +3725,46 @@ static long CAMERA_HW_Ioctl_Compat(struct file *filp, unsigned int cmd, unsigned
 			if (err)
 				return err;
 
+			err |= copy_from_user(&FeatureId, &data32->FeatureId, sizeof(FeatureId));
+			err |= copy_from_user(&FeaturePara, &data32->pFeaturePara, sizeof(FeaturePara));
+			err |= copy_from_user(&FeatureParaLen, &data32->pFeatureParaLen, sizeof(FeatureParaLen));
+
+			if (err) {
+				PK_ERR("[CAMERA SENSOR] copy_from_user failed\n");
+				return err;
+			}
+
+			if (FeaturePara == 0 || FeatureParaLen == 0) {
+				PK_ERR("[CAMERA SENSOR] pFeaturePara == 0 || pFeatureParaLen == 0\n");
+				return -EFAULT;
+			}
+
+			if (FeatureId == SENSOR_FEATURE_GET_SENSOR_VIEWANGLE) {
+				fov = compat_alloc_user_space(16);
+				if (fov == NULL) {
+					PK_ERR("[CAMERA SENSOR] failed to allocate fov temporary buffer\n");
+					return -EFAULT;
+				}
+				data->pFeaturePara = (void*)fov;
+				data->pFeatureParaLen = (void*)16;
+			}
+
 			ret =
 			    filp->f_op->unlocked_ioctl(filp, KDIMGSENSORIOC_X_FEATURECONCTROL,
 						       (unsigned long)data);
 			err = compat_put_acdk_sensor_featurecontrol_struct(data32, data);
+
+			if (err != 0 && fov != NULL) {
+				i = fov[0];
+				err |= put_user(i, (u32*)(uintptr_t)FeaturePara);
+
+				i = fov[1];
+				err |= put_user(i, (u32*)(uintptr_t)((u32)FeaturePara + 4));
+				if (err) {
+					PK_ERR("[CAMERA SENSOR] failed to write fov\n");
+					return -EFAULT;
+				}
+			}
 
 
 			if (err != 0)
