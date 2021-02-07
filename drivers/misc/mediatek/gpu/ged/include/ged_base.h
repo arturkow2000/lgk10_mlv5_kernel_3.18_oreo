@@ -22,7 +22,7 @@
 #else
 #define GED_LOGI(...)
 #endif
-#define GED_LOGE(...)	pr_debug("GED:" __VA_ARGS__)
+#define GED_LOGE(...)	pr_err("GED:" __VA_ARGS__)
 #define GED_CONTAINER_OF(ptr, type, member) ((type *)( ((char *)ptr) - offsetof(type,member) ))
 
 unsigned long ged_copy_to_user(void __user *pvTo, const void *pvFrom, unsigned long ulBytes);

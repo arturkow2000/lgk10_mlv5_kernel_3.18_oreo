@@ -189,6 +189,14 @@ typedef struct GED_BRIDGE_OUT_NOTIFY_VSYNC_TAG {
 	GED_ERROR eError;
 } GED_BRIDGE_OUT_NOTIFY_VSYNC;
 
+#ifdef CONFIG_COMPAT
+typedef struct COMPAT_GED_BRIDGE_OUT_NOTIFY_VSYNC_TAG {
+	COMPAT_GED_DVFS_UM_QUERY_PACK sQueryData;
+	GED_ERROR eError;
+} COMPAT_GED_BRIDGE_OUT_NOTIFY_VSYNC;
+#define COMPAT_GED_BRIDGE_IN_NOTIFY_VSYNC GED_BRIDGE_IN_NOTIFY_VSYNC
+#endif
+
 /*****************************************************************************
  *  DVFS PROBE
  *****************************************************************************/

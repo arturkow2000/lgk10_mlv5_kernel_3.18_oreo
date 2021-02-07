@@ -14,6 +14,8 @@
 #ifndef __GED_TYPE_H__
 #define __GED_TYPE_H__
 
+#include <generated/autoconf.h>
+
 typedef enum GED_ERROR_TAG {
 	GED_OK,
 	GED_ERROR_FAIL,
@@ -126,5 +128,22 @@ typedef struct GED_DVFS_UM_QUERY_PACK_TAG {
 	unsigned int ui32TargetPeriod_us;
 	unsigned int ui32BoostValue;
 } GED_DVFS_UM_QUERY_PACK;
+
+#ifdef CONFIG_COMPAT
+typedef struct COMPAT_GED_DVFS_UM_QUERY_PACK_TAG {
+	char bFirstBorn;
+	unsigned int ui32GPULoading;
+	unsigned int ui32GPUFreqID;
+	unsigned int gpu_cur_freq;
+	unsigned int gpu_pre_freq;
+	long long usT;
+	long long nsOffset;
+	unsigned int ul3DFenceDoneTime;
+	unsigned int ulPreCalResetTS_us;
+	unsigned int ulWorkingPeriod_us;
+	unsigned int ui32TargetPeriod_us;
+	unsigned int ui32BoostValue;
+} COMPAT_GED_DVFS_UM_QUERY_PACK;
+#endif
 
 #endif

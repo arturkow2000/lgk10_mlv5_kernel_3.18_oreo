@@ -71,7 +71,7 @@ GED_LOG_BUF_HANDLE ghLogBuf_ged_srv;
 static int ged_open(struct inode *inode, struct file *filp)
 {
 	filp->private_data = NULL;
-	GED_LOGE("%s:%d:%d\n", __func__, MAJOR(inode->i_rdev), MINOR(inode->i_rdev));
+	GED_LOGI("%s:%d:%d\n", __func__, MAJOR(inode->i_rdev), MINOR(inode->i_rdev));
 	return 0;
 }
 
@@ -82,7 +82,7 @@ static int ged_release(struct inode *inode, struct file *filp)
 
 		free_func(filp->private_data);
 	}
-	GED_LOGE("%s:%d:%d\n", __func__, MAJOR(inode->i_rdev), MINOR(inode->i_rdev));
+	GED_LOGI("%s:%d:%d\n", __func__, MAJOR(inode->i_rdev), MINOR(inode->i_rdev));
 	return 0;
 }
 
@@ -101,7 +101,34 @@ static ssize_t ged_write(struct file *filp, const char __user *buf, size_t count
 	return 0;
 }
 
+#ifdef CONFIG_COMPAT
+int ged_put_notify_vsync_out_struct(
+	COMPAT_GED_BRIDGE_OUT_NOTIFY_VSYNC __user *dest,
+	GED_BRIDGE_OUT_NOTIFY_VSYNC *src) {
+	int err;
+
+	err = 0;
+
+	err |= put_user((char)src->sQueryData.bFirstBorn, &dest->sQueryData.bFirstBorn);
+	err |= put_user((unsigned int)src->sQueryData.ui32GPULoading, &dest->sQueryData.ui32GPULoading);
+	err |= put_user((unsigned int)src->sQueryData.ui32GPUFreqID, &dest->sQueryData.ui32GPUFreqID);
+	err |= put_user((unsigned int)src->sQueryData.gpu_cur_freq, &dest->sQueryData.gpu_cur_freq);
+	err |= put_user((unsigned int)src->sQueryData.gpu_pre_freq, &dest->sQueryData.gpu_pre_freq);
+	err |= put_user((long long)src->sQueryData.usT, &dest->sQueryData.usT);
+	err |= put_user((long long)src->sQueryData.nsOffset, &dest->sQueryData.nsOffset);
+	err |= put_user((unsigned int)src->sQueryData.ul3DFenceDoneTime, &dest->sQueryData.ul3DFenceDoneTime);
+	err |= put_user((unsigned int)src->sQueryData.ulPreCalResetTS_us, &dest->sQueryData.ulPreCalResetTS_us);
+	err |= put_user((unsigned int)src->sQueryData.ulWorkingPeriod_us, &dest->sQueryData.ulWorkingPeriod_us);
+	err |= put_user((unsigned int)src->sQueryData.ui32TargetPeriod_us, &dest->sQueryData.ui32TargetPeriod_us);
+	err |= put_user((unsigned int)src->sQueryData.ui32BoostValue, &dest->sQueryData.ui32BoostValue);
+
+	return err;
+}
+
+static long ged_dispatch(struct file *pFile, GED_BRIDGE_PACKAGE *psBridgePackageKM, bool is_32bit)
+#else
 static long ged_dispatch(struct file *pFile, GED_BRIDGE_PACKAGE *psBridgePackageKM)
+#endif
 {
 	int ret = -EFAULT;
 	void *pvIn = NULL, *pvOut = NULL;
@@ -127,6 +154,11 @@ static long ged_dispatch(struct file *pFile, GED_BRIDGE_PACKAGE *psBridgePackage
 		}
 
 		if (psBridgePackageKM->i32OutBufferSize > 0) {
+#ifdef CONFIG_COMPAT
+			if (GED_GET_BRIDGE_ID(psBridgePackageKM->ui32FunctionID) == GED_BRIDGE_COMMAND_NOTIFY_VSYNC)
+				pvOut = kzalloc(sizeof(GED_BRIDGE_OUT_NOTIFY_VSYNC), GFP_KERNEL);
+			else
+#endif
 			pvOut = kzalloc(psBridgePackageKM->i32OutBufferSize, GFP_KERNEL);
 
 			if (pvOut == NULL)
@@ -136,47 +168,64 @@ static long ged_dispatch(struct file *pFile, GED_BRIDGE_PACKAGE *psBridgePackage
 		/* Make sure that the UM will never break the KM.
 		 * Check IO size are both matched the size of IO sturct.
 		 */
-#define SET_FUNC_AND_CHECK(func, struct_name) do { \
+#define SET_FUNC_AND_CHECK(cmd, func, struct_name) do { \
 		pFunc = (ged_bridge_func_type *) func; \
 		if (sizeof(GED_BRIDGE_IN_##struct_name) > psBridgePackageKM->i32InBufferSize || \
 			sizeof(GED_BRIDGE_OUT_##struct_name) > psBridgePackageKM->i32OutBufferSize) { \
-			GED_LOGE("GED_BRIDGE_COMMAND_##cmd fail io_size:%d/%d, expected: %zu/%zu", \
+			GED_LOGE(""#cmd" fail io_size:%d/%d, expected: %zu/%zu", \
 				psBridgePackageKM->i32InBufferSize, psBridgePackageKM->i32OutBufferSize, \
 				sizeof(GED_BRIDGE_IN_##struct_name), sizeof(GED_BRIDGE_OUT_##struct_name)); \
 			goto dispatch_exit; \
 		} } while (0)
 
+#ifdef CONFIG_COMPAT
+#define COMPAT_SET_FUNC_AND_CHECK(cmd, func, struct_name) do { \
+		pFunc = (ged_bridge_func_type *) func; \
+		if (sizeof(COMPAT_GED_BRIDGE_IN_##struct_name) > psBridgePackageKM->i32InBufferSize || \
+			sizeof(COMPAT_GED_BRIDGE_OUT_##struct_name) > psBridgePackageKM->i32OutBufferSize) { \
+			GED_LOGE(""#cmd" fail io_size:%d/%d, expected: %zu/%zu", \
+				psBridgePackageKM->i32InBufferSize, psBridgePackageKM->i32OutBufferSize, \
+				sizeof(COMPAT_GED_BRIDGE_IN_##struct_name), sizeof(COMPAT_GED_BRIDGE_OUT_##struct_name)); \
+			goto dispatch_exit; \
+		} } while (0)
+#endif
+
 		/* we will change the below switch into a function pointer mapping table in the future */
 		switch (GED_GET_BRIDGE_ID(psBridgePackageKM->ui32FunctionID)) {
 		case GED_BRIDGE_COMMAND_LOG_BUF_GET:
-			SET_FUNC_AND_CHECK(ged_bridge_log_buf_get, LOGBUFGET);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_LOG_BUF_GET, ged_bridge_log_buf_get, LOGBUFGET);
 			break;
 		case GED_BRIDGE_COMMAND_LOG_BUF_WRITE:
-			SET_FUNC_AND_CHECK(ged_bridge_log_buf_write, LOGBUFWRITE);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_LOG_BUF_WRITE, ged_bridge_log_buf_write, LOGBUFWRITE);
 			break;
 		case GED_BRIDGE_COMMAND_LOG_BUF_RESET:
-			SET_FUNC_AND_CHECK(ged_bridge_log_buf_reset, LOGBUFRESET);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_LOG_BUF_RESET, ged_bridge_log_buf_reset, LOGBUFRESET);
 			break;
 		case GED_BRIDGE_COMMAND_BOOST_GPU_FREQ:
-			SET_FUNC_AND_CHECK(ged_bridge_boost_gpu_freq, BOOSTGPUFREQ);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_BOOST_GPU_FREQ, ged_bridge_boost_gpu_freq, BOOSTGPUFREQ);
 			break;
 		case GED_BRIDGE_COMMAND_MONITOR_3D_FENCE:
-			SET_FUNC_AND_CHECK(ged_bridge_monitor_3D_fence, MONITOR3DFENCE);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_MONITOR_3D_FENCE, ged_bridge_monitor_3D_fence, MONITOR3DFENCE);
 			break;
 		case GED_BRIDGE_COMMAND_QUERY_INFO:
-			SET_FUNC_AND_CHECK(ged_bridge_query_info, QUERY_INFO);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_QUERY_INFO, ged_bridge_query_info, QUERY_INFO);
 			break;
 		case GED_BRIDGE_COMMAND_NOTIFY_VSYNC:
-			SET_FUNC_AND_CHECK(ged_bridge_notify_vsync, NOTIFY_VSYNC);
+#ifdef CONFIG_COMPAT
+			if (is_32bit)
+				COMPAT_SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_NOTIFY_VSYNC, ged_bridge_notify_vsync, NOTIFY_VSYNC);
+			else
+#endif
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_NOTIFY_VSYNC, ged_bridge_notify_vsync, NOTIFY_VSYNC);
 			break;
 		case GED_BRIDGE_COMMAND_DVFS_PROBE:
-			SET_FUNC_AND_CHECK(ged_bridge_dvfs_probe, DVFS_PROBE);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_DVFS_PROBE, ged_bridge_dvfs_probe, DVFS_PROBE);
 			break;
 		case GED_BRIDGE_COMMAND_DVFS_UM_RETURN:
-			SET_FUNC_AND_CHECK(ged_bridge_dvfs_um_retrun, DVFS_UM_RETURN);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_DVFS_UM_RETURN, ged_bridge_dvfs_um_retrun, DVFS_UM_RETURN);
 			break;
 		case GED_BRIDGE_COMMAND_EVENT_NOTIFY:
-			SET_FUNC_AND_CHECK(ged_bridge_event_notify, EVENT_NOTIFY);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_EVENT_NOTIFY, ged_bridge_event_notify, EVENT_NOTIFY);
 			break;
 #ifdef ENABLE_FRR_FOR_MT6XXX_PLATFORM
 		case GED_BRIDGE_COMMAND_VSYNC_WAIT:
@@ -184,16 +233,16 @@ static long ged_dispatch(struct file *pFile, GED_BRIDGE_PACKAGE *psBridgePackage
 			break;
 #endif
 		case GED_BRIDGE_COMMAND_GE_ALLOC:
-			SET_FUNC_AND_CHECK(ged_bridge_ge_alloc, GE_ALLOC);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_GE_ALLOC, ged_bridge_ge_alloc, GE_ALLOC);
 			break;
 		case GED_BRIDGE_COMMAND_GE_GET:
-			SET_FUNC_AND_CHECK(ged_bridge_ge_get, GE_GET);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_GE_GET, ged_bridge_ge_get, GE_GET);
 			break;
 		case GED_BRIDGE_COMMAND_GE_SET:
-			SET_FUNC_AND_CHECK(ged_bridge_ge_set, GE_SET);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_GE_SET, ged_bridge_ge_set, GE_SET);
 			break;
 		case GED_BRIDGE_COMMAND_GE_INFO:
-			SET_FUNC_AND_CHECK(ged_bridge_ge_info, GE_INFO);
+			SET_FUNC_AND_CHECK(GED_BRIDGE_COMMAND_GE_INFO, ged_bridge_ge_info, GE_INFO);
 			break;
 		default:
 			GED_LOGE("Unknown Bridge ID: %u\n", GED_GET_BRIDGE_ID(psBridgePackageKM->ui32FunctionID));
@@ -205,6 +254,15 @@ static long ged_dispatch(struct file *pFile, GED_BRIDGE_PACKAGE *psBridgePackage
 
 		if (psBridgePackageKM->i32OutBufferSize > 0)
 		{
+#ifdef CONFIG_COMPAT
+			if (GED_GET_BRIDGE_ID(psBridgePackageKM->ui32FunctionID) == GED_BRIDGE_COMMAND_NOTIFY_VSYNC) {
+				ret = ged_put_notify_vsync_out_struct(psBridgePackageKM->pvParamOut, pvOut);
+				if (ret)
+					GED_LOGE("ged_put_notify_vsync_out_struct failed\n");
+				goto dispatch_exit;
+			}
+			else
+#endif
 			if (0 != ged_copy_to_user(psBridgePackageKM->pvParamOut, pvOut, psBridgePackageKM->i32OutBufferSize))
 			{
 				goto dispatch_exit;
@@ -232,7 +290,11 @@ static long ged_ioctl(struct file *pFile, unsigned int ioctlCmd, unsigned long a
 		goto unlock_and_return;
 	}
 
+#ifndef CONFIG_COMPAT
 	ret = ged_dispatch(pFile, psBridgePackageKM);
+#else
+	ret = ged_dispatch(pFile, psBridgePackageKM, false);
+#endif
 
 unlock_and_return:
 
@@ -271,7 +333,7 @@ static long ged_ioctl_compat(struct file *pFile, unsigned int ioctlCmd, unsigned
 	sBridgePackageKM64.i32InBufferSize = psBridgePackageKM32->i32InBufferSize;
 	sBridgePackageKM64.i32OutBufferSize = psBridgePackageKM32->i32OutBufferSize;
 
-	ret = ged_dispatch(pFile, &sBridgePackageKM64);
+	ret = ged_dispatch(pFile, &sBridgePackageKM64, true);
 
 unlock_and_return:
 
