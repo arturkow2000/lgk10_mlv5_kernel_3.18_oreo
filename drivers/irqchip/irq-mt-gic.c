@@ -1496,10 +1496,18 @@ int __init mt_gic_of_init(struct device_node *node, struct device_node *parent)
 	WARN(!cpu_base, "unable to map gic cpu registers\n");
 	GIC_CPU_BASE = cpu_base;
 
+#ifdef CONFIG_ARM64
+	pol_base = of_iomap(node, 4);
+#else
 	pol_base = of_iomap(node, 2);
+#endif
 	WARN(!pol_base, "unable to map pol registers\n");
 	INT_POL_CTL0 = pol_base;
+#ifdef CONFIG_ARM64
+	if (of_address_to_resource(node, 4, &res))
+#else
 	if (of_address_to_resource(node, 2, &res))
+#endif
 		WARN(!pol_base, "unable to map pol registers\n");
 
 	INT_POL_CTL0_phys = res.start;

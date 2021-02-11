@@ -310,8 +310,12 @@
 		#address-cells = <0>;
 		interrupt-controller;
 		reg = <0 0x10231000 0 0x1000>,
-		      <0 0x10232000 0 0x1000>,
+		      <0 0x10232000 0 0x2000>,
+		      <0 0x10234000 0 0x2000>,
+		      <0 0x10236000 0 0x2000>,
 		      <0 0x10200620 0 0x1000>;
+		interrupts = <GIC_PPI 9
+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
 	};
 
 	cpuxgpt@10200000 {
@@ -342,10 +346,14 @@
 
 	timer {
 		compatible = "arm,armv8-timer";
-		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-				<GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-				<GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-				<GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+		interrupts = <GIC_PPI 13
+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+				<GIC_PPI 14
+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+				<GIC_PPI 11
+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+				<GIC_PPI 10
+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
 		clock-frequency = <13000000>;
 		};
 

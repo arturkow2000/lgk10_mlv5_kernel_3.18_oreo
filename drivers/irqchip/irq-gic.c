@@ -181,7 +181,7 @@ static void gic_eoi_irq(struct irq_data *d)
 		gic_arch_extn.irq_eoi(d);
 		raw_spin_unlock(&irq_controller_lock);
 	}
-#ifdef CONFIG_LGE_MTK_RTB
+#ifndef CONFIG_LGE_MTK_RTB
 	writel_relaxed(gic_irq(d), gic_cpu_base(d) + GIC_CPU_EOI);
 #else
 	writel_relaxed_no_log(gic_irq(d), gic_cpu_base(d) + GIC_CPU_EOI);
