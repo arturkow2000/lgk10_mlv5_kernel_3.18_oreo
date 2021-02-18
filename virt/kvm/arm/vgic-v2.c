@@ -48,6 +48,10 @@ static struct vgic_lr vgic_v2_get_lr(const struct kvm_vcpu *vcpu, int lr)
 		lr_desc.state |= LR_STATE_ACTIVE;
 	if (val & GICH_LR_EOI)
 		lr_desc.state |= LR_EOI_INT;
+	if (val & GICH_LR_HW) {
+		lr_desc.state |= LR_HW;
+		lr_desc.hwirq = (val & GICH_LR_PHYSID_CPUID) >> GICH_LR_PHYSID_CPUID_SHIFT;
+	}
 
 	return lr_desc;
 }
@@ -55,7 +59,9 @@ static struct vgic_lr vgic_v2_get_lr(const struct kvm_vcpu *vcpu, int lr)
 static void vgic_v2_set_lr(struct kvm_vcpu *vcpu, int lr,
 			   struct vgic_lr lr_desc)
 {
-	u32 lr_val = (lr_desc.source << GICH_LR_PHYSID_CPUID_SHIFT) | lr_desc.irq;
+	u32 lr_val;
+
+	lr_val = lr_desc.irq;
 
 	if (lr_desc.state & LR_STATE_PENDING)
 		lr_val |= GICH_LR_PENDING_BIT;
@@ -63,6 +69,14 @@ static void vgic_v2_set_lr(struct kvm_vcpu *vcpu, int lr,
 		lr_val |= GICH_LR_ACTIVE_BIT;
 	if (lr_desc.state & LR_EOI_INT)
 		lr_val |= GICH_LR_EOI;
+
+	if (lr_desc.state & LR_HW) {
+		lr_val |= GICH_LR_HW;
+		lr_val |= (u32)lr_desc.hwirq << GICH_LR_PHYSID_CPUID_SHIFT;
+	}
+
+	if (lr_desc.irq < VGIC_NR_SGIS)
+		lr_val |= (lr_desc.source << GICH_LR_PHYSID_CPUID_SHIFT);
 
 	vcpu->arch.vgic_cpu.vgic_v2.vgic_lr[lr] = lr_val;
 }
@@ -237,12 +251,16 @@ int vgic_v2_probe(struct device_node *vgic_node,
 		goto out_unmap;
 	}
 
+	vgic->can_emulate_gicv2 = true;
+	kvm_register_device_ops(&kvm_arm_vgic_v2_ops, KVM_DEV_TYPE_ARM_VGIC_V2);
+
 	vgic->vcpu_base = vcpu_res.start;
 
 	kvm_info("%s@%llx IRQ%d\n", vgic_node->name,
 		 vctrl_res.start, vgic->maint_irq);
 
 	vgic->type = VGIC_V2;
+	vgic->max_gic_vcpus = VGIC_V2_MAX_CPUS;
 	*ops = &vgic_v2_ops;
 	*params = vgic;
 	goto out;

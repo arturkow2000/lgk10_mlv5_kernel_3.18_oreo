@@ -22,6 +22,9 @@
 #include <asm/cputype.h>
 #include <asm/kvm_emulate.h>
 #include <asm/kvm_psci.h>
+#include <asm/kvm_host.h>
+
+#include <uapi/linux/psci.h>
 
 /*
  * This is an implementation of the Power State Coordination Interface
@@ -66,25 +69,17 @@ static void kvm_psci_vcpu_off(struct kvm_vcpu *vcpu)
 static unsigned long kvm_psci_vcpu_on(struct kvm_vcpu *source_vcpu)
 {
 	struct kvm *kvm = source_vcpu->kvm;
-	struct kvm_vcpu *vcpu = NULL, *tmp;
+	struct kvm_vcpu *vcpu = NULL;
 	wait_queue_head_t *wq;
 	unsigned long cpu_id;
 	unsigned long context_id;
-	unsigned long mpidr;
 	phys_addr_t target_pc;
-	int i;
 
-	cpu_id = *vcpu_reg(source_vcpu, 1);
+	cpu_id = *vcpu_reg(source_vcpu, 1) & MPIDR_HWID_BITMASK;
 	if (vcpu_mode_is_32bit(source_vcpu))
 		cpu_id &= ~((u32) 0);
 
-	kvm_for_each_vcpu(i, tmp, kvm) {
-		mpidr = kvm_vcpu_get_mpidr(tmp);
-		if ((mpidr & MPIDR_HWID_BITMASK) == (cpu_id & MPIDR_HWID_BITMASK)) {
-			vcpu = tmp;
-			break;
-		}
-	}
+	vcpu = kvm_mpidr_to_vcpu(kvm, cpu_id);
 
 	/*
 	 * Make sure the caller requested a valid CPU and that the CPU is
@@ -131,7 +126,7 @@ static unsigned long kvm_psci_vcpu_on(struct kvm_vcpu *source_vcpu)
 
 static unsigned long kvm_psci_vcpu_affinity_info(struct kvm_vcpu *vcpu)
 {
-	int i;
+	int i, matching_cpus = 0;
 	unsigned long mpidr;
 	unsigned long target_affinity;
 	unsigned long target_affinity_mask;
@@ -155,12 +150,16 @@ static unsigned long kvm_psci_vcpu_affinity_info(struct kvm_vcpu *vcpu)
 	 * then ON else OFF
 	 */
 	kvm_for_each_vcpu(i, tmp, kvm) {
-		mpidr = kvm_vcpu_get_mpidr(tmp);
-		if (((mpidr & target_affinity_mask) == target_affinity) &&
-		    !tmp->arch.pause) {
-			return PSCI_0_2_AFFINITY_LEVEL_ON;
+		mpidr = kvm_vcpu_get_mpidr_aff(tmp);
+		if ((mpidr & target_affinity_mask) == target_affinity) {
+			matching_cpus++;
+			if (!tmp->arch.pause)
+				return PSCI_0_2_AFFINITY_LEVEL_ON;
 		}
 	}
+
+	if (!matching_cpus)
+		return PSCI_RET_INVALID_PARAMS;
 
 	return PSCI_0_2_AFFINITY_LEVEL_OFF;
 }

@@ -176,6 +176,9 @@
 #define ESR_ELx_SYS64_ISS_SYS_CNTFRQ   (ESR_ELx_SYS64_ISS_SYS_VAL(3, 3, 0, 14, 0) | \
 					ESR_ELx_SYS64_ISS_DIR_READ)
 
+#define ESR_ELx_xVC_IMM_MASK	((1UL << 16) - 1)
+#define ESR_ELx_FSC_ACCESS	(0x08)
+
 #ifndef __ASSEMBLY__
 #include <asm/types.h>
 

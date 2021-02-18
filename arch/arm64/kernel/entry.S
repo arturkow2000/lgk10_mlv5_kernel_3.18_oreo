@@ -367,8 +367,8 @@ el1_sync:
 	str	x0, [x20, #TI_REGS_ON_EXCP]
 el1_sync_nest:
 	mrs	x1, esr_el1			// read the syndrome register
-	lsr	x24, x1, #ESR_EL1_EC_SHIFT	// exception class
-	cmp	x24, #ESR_EL1_EC_DABT_EL1	// data abort in EL1
+	lsr	x24, x1, #ESR_ELx_EC_SHIFT	// exception class
+	cmp	x24, #ESR_ELx_EC_DABT_CUR	// data abort in EL1
 	b.ne	el1_sync_nest_skip_dec
 	sub	w4, w4, #0x1
 	str	w4, [x20, #TI_CPU_EXCP]

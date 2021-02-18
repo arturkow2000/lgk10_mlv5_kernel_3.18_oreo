@@ -92,12 +92,6 @@ static inline void gic_write_eoir(u32 irq)
 	isb();
 }
 
-static inline void gic_write_dir(u32 irq)
-{
-	asm volatile("msr_s " __stringify(ICC_DIR_EL1) ", %0" : : "r" ((u64)irq));
-	isb();
-}
-
 static inline u64 gic_read_iar(void)
 {
 	u64 irqstat;

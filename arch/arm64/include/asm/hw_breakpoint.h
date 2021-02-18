@@ -18,6 +18,8 @@
 
 #ifdef __KERNEL__
 
+#include <asm/cpufeature.h>
+
 struct arch_hw_breakpoint_ctrl {
 	u32 __reserved	: 19,
 	len		: 8,
@@ -135,6 +137,18 @@ static inline void ptrace_hw_copy_thread(struct task_struct *task)
 #endif
 
 extern struct pmu perf_ops_bp;
+
+/* Determine number of BRP registers available. */
+static inline int get_num_brps(void)
+{
+        return cpuid_feature_extract_field(read_system_reg(SYS_ID_AA64DFR0_EL1), ID_AA64DFR0_BRPS_SHIFT) + 1;
+}
+
+/* Determine number of WRP registers available. */
+static inline int get_num_wrps(void)
+{
+	return cpuid_feature_extract_field(read_system_reg(SYS_ID_AA64DFR0_EL1), ID_AA64DFR0_WRPS_SHIFT) + 1;
+}
 
 #endif	/* __KERNEL__ */
 #endif	/* __ASM_BREAKPOINT_H */

@@ -30,6 +30,7 @@
 struct seq_file;
 struct module;
 struct msi_msg;
+enum irqchip_irq_state;
 
 /*
  * IRQ line status.
@@ -360,6 +361,9 @@ struct irq_chip {
 	void		(*irq_release_resources)(struct irq_data *data);
 
 	void		(*irq_compose_msi_msg)(struct irq_data *data, struct msi_msg *msg);
+
+	int		(*irq_get_irqchip_state)(struct irq_data *data, enum irqchip_irq_state which, bool *state);
+	int		(*irq_set_irqchip_state)(struct irq_data *data, enum irqchip_irq_state which, bool state);
 
 	unsigned long	flags;
 };

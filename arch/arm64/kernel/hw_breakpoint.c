@@ -52,22 +52,6 @@ static DEFINE_PER_CPU(int, stepping_kernel_bp);
 static int core_num_brps;
 static int core_num_wrps;
 
-/* Determine number of BRP registers available. */
-static int get_num_brps(void)
-{
-	return 1 +
-		cpuid_feature_extract_field(read_system_reg(SYS_ID_AA64DFR0_EL1),
-						ID_AA64DFR0_BRPS_SHIFT);
-}
-
-/* Determine number of WRP registers available. */
-static int get_num_wrps(void)
-{
-	return 1 +
-		cpuid_feature_extract_field(read_system_reg(SYS_ID_AA64DFR0_EL1),
-						ID_AA64DFR0_WRPS_SHIFT);
-}
-
 int hw_breakpoint_slots(int type)
 {
 	/*

@@ -38,6 +38,7 @@ static inline bool context_tracking_in_user(void)
 }
 #else
 static inline bool context_tracking_in_user(void) { return false; }
+static inline bool context_tracking_cpu_is_enabled(void) { return false; }
 static inline bool context_tracking_active(void) { return false; }
 #endif /* CONFIG_CONTEXT_TRACKING */
 

@@ -126,6 +126,7 @@ extern char __kvm_hyp_vector[];
 
 extern void __kvm_flush_vm_context(void);
 extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa);
+extern void __kvm_tlb_flush_vmid(struct kvm *kvm);
 
 extern int __kvm_vcpu_run(struct kvm_vcpu *vcpu);
 
@@ -135,6 +136,8 @@ extern char __save_vgic_v2_state[];
 extern char __restore_vgic_v2_state[];
 extern char __save_vgic_v3_state[];
 extern char __restore_vgic_v3_state[];
+
+extern u32 __kvm_get_mdcr_el2(void);
 
 #endif
 
