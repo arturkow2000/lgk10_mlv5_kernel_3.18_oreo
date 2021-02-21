@@ -115,6 +115,57 @@ static void gic_redist_wait_for_rwp(void)
 	gic_do_wait_for_rwp(gic_data_rdist_rd_base());
 }
 
+/* Low level accessors */
+static u64 __maybe_unused gic_read_iar(void)
+{
+	u64 irqstat;
+
+	asm volatile("mrs_s %0, " __stringify(ICC_IAR1_EL1) : "=r" (irqstat));
+	return irqstat;
+}
+
+static void __maybe_unused gic_write_pmr(u64 val)
+{
+	asm volatile("msr_s " __stringify(ICC_PMR_EL1) ", %0" : : "r" (val));
+}
+
+static void __maybe_unused gic_write_ctlr(u64 val)
+{
+	asm volatile("msr_s " __stringify(ICC_CTLR_EL1) ", %0" : : "r" (val));
+	isb();
+}
+
+static void __maybe_unused gic_write_grpen1(u64 val)
+{
+	asm volatile("msr_s " __stringify(ICC_GRPEN1_EL1) ", %0" : : "r" (val));
+	isb();
+}
+
+static void __maybe_unused gic_write_sgi1r(u64 val)
+{
+	asm volatile("msr_s " __stringify(ICC_SGI1R_EL1) ", %0" : : "r" (val));
+}
+
+static void gic_enable_sre(void)
+{
+	u64 val;
+
+	asm volatile("mrs_s %0, " __stringify(ICC_SRE_EL1) : "=r" (val));
+	val |= ICC_SRE_EL1_SRE;
+	asm volatile("msr_s " __stringify(ICC_SRE_EL1) ", %0" : : "r" (val));
+	isb();
+
+	/*
+	 * Need to check that the SRE bit has actually been set. If
+	 * not, it means that SRE is disabled at EL2. We're going to
+	 * die painfully, and there is nothing we can do about it.
+	 *
+	 * Kindly inform the luser.
+	 */
+	asm volatile("mrs_s %0, " __stringify(ICC_SRE_EL1) : "=r" (val));
+	if (!(val & ICC_SRE_EL1_SRE))
+		pr_err("GIC: unable to set SRE (disabled at EL2), panic ahead\n");
+}
 
 static void gic_enable_redist(void)
 {
@@ -350,7 +401,7 @@ static int gic_populate_rdist(void)
 		}
 
 		do {
-			typer = gic_read_typer(ptr + GICR_TYPER);
+			typer = readq_relaxed(ptr + GICR_TYPER);
 			if ((typer >> 32) == aff) {
 				gic_data_rdist_rd_base() = ptr;
 				pr_info("CPU%d: found redistributor %lx @%p\n",
